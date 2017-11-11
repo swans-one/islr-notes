@@ -1,18 +1,132 @@
 * An Overview of Statistical Learning
+
+- Statistical Learning :: vast set of tools for understanding data
+- supervised statistical learning :: building a statistical model for
+     prediction or estimating and output based on one or more inputs
+- unsupervised statistical learning :: models with inputs but no
+     supervising outputs.
+
+Brief discussion of three real world datasets from this book
+
 ** Wage Data
+
+- Refered to as the ~Wage~ data set throughout the book.
+- Factors that relate to wages
+  - age
+  - education
+  - year
+  - wage
+- Demographics: males form the Atlantic region of the US
+
+Each of age, education, and year are related to wage, but the best
+predictor of wage will be from a combination of these factors.
+
+- regression problem :: Predicting a /continuous/ or /quantitative/ output value.
+
+- Chapter 3 -> Linear regression for predictions on this dataset
+- Chapter 7 -> approaches for addressing nonlinearities in this data
+
 ** Stock Market Data
+
+- Referred to as ~Smarket~ data throughout this book.
+- Daily movement in the S&P 500 over a 5 year period (2001-2005)
+
+- categorical :: A non-numeric value we'd like to predict
+
+- predict if the index will increase or decrease on a given day
+  - using the past 5 days %change in the index
+  - Predicting the catogory "up" or "down"
+
+- classification :: predicting a categorical variable
+
+- Ch 4 -> statistical learning methods for classification.
+
 ** Gene Expression Data
+
+Refer to as ~NCI60~ data set in the book: 6,830 gene expression
+measurements for each of 64 cancer cell lines.
+
+Sometimes you have questions where no natural output variable is
+available. "Are there any patterns in this cancer data?"
+
+- clustering :: grouping individuals according to observed
+                characteristics
+
+- dimensionality reduction :: combining / summarizing a large number
+     of variables into a smaller number
 
 * A Brief History of Statistical Learning
 
+Early methods of statistical learning:
+
+- method of least squares :: 1800s---Legendre and Gauss
+- linear discriminant analysis :: 1936---Fisher
+- logistic regression :: 1940s---Various authors
+- generalized linear models :: 1970s--Nelder and Wedderburn
+
+Through the 70s, basically all methods were "linear" because they were
+possible to compute without computers.
+
+- classification and regression trees :: 1980s---Breiman, Friedman, Olshen and Stone
+  - Included cross-validation in their method
+- generalized additive models :: 1986---Hastie and Tibshirani
+  - non-linear extensions to glms
+
+More methods have come up recently as well. /Machine Learning/ is now
+a subfied of statistics.
+
 * This Book
+
+- Following the success of /Elements of Statistical Learning/ (ESL)
+  - A more approachable treatment of the topics
+  - Relies on the new software available (R)
+
+- Based on 4 premises
+  1. Many statistical learning methods are relevant and useful in a
+     wide range of academic and non-academic disciplies, beyond just
+     the statistical sciences.
+  2. Statistical learning should not be viewed as a series of black
+     boxes.
+  3. While it is important to know what job is performed by each cog,
+     it is not neccessary to have the skills to construct the machine
+     inside the box.
+  4. We presume that the reader is interested in applying statistical
+     learning methods to real-world problems.
 
 * Who Should Read This Book
 
+"Anyone interested in statistical methods for modelling and prediction
+from data"
+
 * Notation and Simple Matrix Algebra
+
+- $n$ :: the distinct data points or observations in our sample
+- $p$ :: number of variables that are available for making predictions
+- $x_{ij}$ :: the value of the \( j \)th variable for the \( i \)th observation.
+- $\mathbf{X}$ :: an $n \cross p$ matrix whose \( (i,j) \)th element is $x_{ij}$
+- $y_i$ :: the \( i \)th observation of the variable we wish to predict
+
+Vectors of length $n$ will always be in lowercase bold, e.g.
+
+\begin{equation}
+  \mathbf{a} = \begin{pmatrix}
+    a_1 \\ a_2 \\ \vdots \\ a_n
+  \end{pmatrix}
+\end{equation}
+
+Whereas vectors of length other than $n$ will be in lowercase, normal
+font, e.g. $a$.
+
+Matrices will be denoted by uppercase bold variables,
+e.g. $\mathbf{A}$. We can specify dimension for matrices or vectors
+like $\mathbf{A} \in \mathbb{R}^{n \cross k}$.
 
 * Organization of This Book
 
+Cool shit.
+
 * Data Sets Used in Labs and Exercises
 
-End Pg 14
+All datasets will be availabe in the ~ISLR~ library, except for
+~Boston~ (part of ~MASS~) and ~USArrests~ part of the base R
+distribution.
