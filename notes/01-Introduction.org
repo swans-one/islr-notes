@@ -1,0 +1,18 @@
+* An Overview of Statistical Learning
+** Wage Data
+** Stock Market Data
+** Gene Expression Data
+
+* A Brief History of Statistical Learning
+
+* This Book
+
+* Who Should Read This Book
+
+* Notation and Simple Matrix Algebra
+
+* Organization of This Book
+
+* Data Sets Used in Labs and Exercises
+
+End Pg 14
