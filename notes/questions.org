@@ -7,3 +7,6 @@
 
 - pg 37, are we supposed to understand how bayes estimator is implemented?
   - Do I need to understand the bayes error rate?
+
+- pg 50, that pairs equation, how does it work?
+  - ALSO SO FUCKING COOL, holy shit
