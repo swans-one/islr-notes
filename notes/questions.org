@@ -1,0 +1,9 @@
+* 02 Statistical Learning
+
+- pg 34. In talking about a test set, they talk about y_0 and x_0, I
+  don't understand what they're getting at.
+
+- pg 36, figure 2.12, really understand this.
+
+- pg 37, are we supposed to understand how bayes estimator is implemented?
+  - Do I need to understand the bayes error rate?

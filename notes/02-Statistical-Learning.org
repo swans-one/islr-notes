@@ -1,0 +1,284 @@
+* 2.1 What is Statistical Learning
+
+- An example:
+  - sales of a product in 200 markets
+  - budgets in each market for
+    - tv
+    - radio
+    - newspaper
+
+We assume there is some relationship between the quatitative response
+(sales) $Y$, and the $p$ different predictors $X=(X_1, X_2, \ldots, X_p).
+
+\begin{equation}
+  Y = f(X) + \varepsilon
+\end{equation}
+
+Here, $f$ is a fixed but unknown function of $X$ and $\varepsilon$ is
+a random error term, independent of $X$ with mean zero.
+
+- systematic information :: the information, represented by $f$, that
+     $X$ provides about $Y$.
+
+The true function $f$ is usually unkown, one usually must estimate it
+from the observed points.
+
+In essence statistical learning refers to a set of approaches for
+estimating $f$.
+
+** Why Estimate f?
+
+Two reasons: prediction and inference.
+
+*** Prediction
+
+If it's easy to obtain examples of $X$ but hard to get examples of
+$Y$, we can predict using
+
+\begin{equation}
+  \hat{Y} = \hat{f}(X)
+\end{equation}
+
+where $\hat{f}$ represents our estimate for $f$.
+
+- reducible error :: Occurs when $\hat{f}$ is not a perfect
+     estimate. Need to improve $f$.
+- irreducible error :: Comes from the error term which is by
+     definition not captured (independent of) $X$.
+  - Unmeasured variables
+  - Unmeasureable variation
+
+*** Inference
+
+Understanding how $Y$ will change in response to changes in
+$X_1, \ldots, X_p$.
+
+In this case we'll want to estimate $f$, but we can't treat $\hat{f}$
+as a black box, since the goal is to understand it.
+
+Questions we may ask:
+ - Which predictors are associated with the response
+ - What is the relationship between the response and each predictor?
+ - Can the relationship between $Y$ and each predictor be adequately
+   summarized using a linear equation, or is the relationship more
+   complicated?
+
+Whether we're interested in prediction or inference will influence our
+choice of model.
+
+** How Do We Estimate f?
+
+Given some training data $(Y, X)$, we want to apply a statistical leanring
+method to the training data to ustimate the unknown function $f$ such that
+$Y \approx \hat{f}(X)$.
+
+There are two methods to do this, parametric and non-parametric.
+
+*** Parametric Methods
+
+Parametric methods take two steps:
+
+1. A modeling step. Where we make an assumption about the form of
+   $f$. For example we could assume $f$ is linear in $X$.
+
+   \begin{equation}
+     f(X) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p.
+   \end{equation}
+
+   This simplifying assumtion reduces the task of estimating $f$ to
+   simply estimating values for $\beta_0, \ldots, \beta_p$.
+
+2. After the model has been selected we need a procedure that uses the
+   training data to /fit/ or /train/ the model. In the case of the
+   linear model, we usually use Ordinary Least Squares, but there are
+   other techniques.
+
+
+- parametric model :: A model where training is simply fitting a set
+     of parameters.
+
+*** Non-parametric Methods
+
+- non-parametric model :: A model that does not make explicit
+     assumptions about the functional form of $f$.
+  - Just wants to get as close to the data points of $f$ without being
+    too rough or wiggly.
+
+|      | parametric                            | non parametric          |
+|------+---------------------------------------+-------------------------|
+| pros | easy to understand / fit              | fits the data well      |
+|      |                                       | no assumption about $f$ |
+|------+---------------------------------------+-------------------------|
+| cons | May not capture true structure of $f$ | May overfit             |
+|      |                                       | Hard to understand      |
+|------+---------------------------------------+-------------------------|
+
+** The Trade-Off between Prediction Accuracy and Model Interpretability
+
+Why would we ever choose a more restrictive method instead of a very
+flexible approach?
+
+- In general as flexibility increases, interpretability decreases.
+- We may be interested in inference
+
+** Supervised Versus Unsupervised Learning
+
+We've discussed supervised learning so far. For each observation of
+the predictor measurements $x_i$ there is an associated response
+measurement $y_i$. The vast majority of this book discusses these
+models.
+
+Unsupervised learning is a more challeging situation where for each
+observation, we only have the measurements $x_i$ but no response
+$y_i$.
+
+What sort of analysis is possible unsupervised?
+
+- cluster analysis :: Discover if the inputs fall into distinct
+     groups.
+
+- semi-supervised learning :: When we have a dataset with only some
+     labeled data points. (Beyond the scope of this book).
+
+** Regression Versus Classification Problems
+
+Variables can be either /quantitative/ or /qualitative/ (also known as
+/categorical/).
+
+- quatitative variable :: take on a numeric variable
+- qualitative (categorical) variable :: Take on values in one of $K$
+     different classes.
+
+We separate our modeling problems based on our response variable.
+
+- regression problem :: A modeling problem with a quantitative
+     response variable
+- classificaton problem :: A modeling problem with a categorical
+     response variable.
+
+It is generally less important if the predictors are considered
+qualitative or quantitative, as long as they're properly /coded/.
+
+* 2.2 Assessing Model Accuracy
+
+/There is no free lunch in statistics/. There is no one method that is
+the /best/ method for all statistical learning approaches.
+
+Therefore we need some way to assess the quality of different
+modelling approaches.
+
+** Measuring the Quality of Fit
+
+- quality of fit :: how well the predictions match the observed data.
+
+In a regression setting we often use /mean squared error/ (MSE), given
+by
+
+\begin{equation}
+  MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}(x_i))^2
+\end{equation}
+
+When we use this MSE equation on the training data, it is more
+accurately refered to as the /training MSE/.
+
+Usually though, we don't care about its accuracy on the training data,
+we care about accuracy on novel data. If we had data we didn't use in
+our training model, we could compute a /test MSE/ which would be
+interesting to minimize.
+
+It is possible to continue reducing training MSE past the lowest
+possible test MSE. At this point, test MSE will often go up.
+
+- overfitting :: When a method yields a small training MSE but large
+                 test MSE.
+  - This means our method is working too hard to find patterns in the
+    training data that are due to random chance.
+
+*Note:* often we don't have a test set that is separate from our
+training set, we'll look at ways around this (cross validation) later.
+
+** The Bias-Variance Trade-Off
+
+The U-shaped curve in the test MSE vs model complexity is the result
+of two competing properteis of statistical learning methods, vias, and
+variance.
+
+\begin{equation}
+  E \left( y_o - \hat{f}(x_0) \right)^2 = Var(\hat{f}(x_0)) + \left[ Bias(\hat{f}(x_0)) \right]^2 + Var(\varepsilon)
+\end{equation}
+
+Here, the left hand side of the equation represents our ideal test
+MSE. This equation tells us that to minimize expected test error we
+need to select a statistical learning method that simultaneously
+achieves /low variance/ and /low bias/.
+
+Because both variance and bias are nonnegative, test MSE can never lay
+below $Var(\varepsilon)$.
+
+In this context we can describe Variance and Bias as:
+
+- Variance :: the amount by which $\hat{f}$ will change if we estimate
+              it using a different training data set.
+  - Different training sets will result in different $\hat{f}$
+  - A good model will likely see little change in $\hat{f}$ for
+    different training sets
+  - A high variance model will see very different $\hat{f}$ for
+    different training sets.
+- Bias :: The error that is introduced by estimating a complicated
+          real function by a simplified model.
+  - For example, estimating a complicated function with a linear model
+    may have high bias.
+
+
+In general, the more flexible methods, variance will increase and bias
+will decreaes.
+
+This is a tradeoff because it's easy to obtain just low bias (with
+high variance) or just low variance (with high bias), but hard to get
+the two just right.
+
+** The Classification Setting
+
+The concepts of MSE and bias/variance trade offs assume a regression
+setting. These concepts transfer to a classification setting with
+small modifications.
+
+The MSE becomes the /error rate/, given by
+
+\begin{equation}
+  \frac{1}{n} \sum_{i=1}^{n} I(y_i \neq \hat{y}_i)
+\end{equation}
+
+Here $I$ is an indicator function that is 1 if they are not equal, and
+zero if they are. So we're counting the times our prediction does not
+match the true value.
+
+*** The Bayes Classifier
+
+- bayse classifier :: assigns each observation to the most likely
+     class given its predictor values.
+
+\begin{equation}
+  P(Y = j | X = x_0)
+\end{equation}
+
+A bayes classifier produces the lowest possible error rate, called the
+/Bayes error rate/. The Bayes error rate is analogous to the
+irreducible error.
+
+*** K-Nearest Neighbors
+
+* 2.3 Lab; Introduction to R
+
+See ~labs/02-intro-to-r.r~
+
+** Basic Commands
+** Graphics
+** Indexing Data
+** Loading Data
+** Additional Graphical and Numerical Summaries
+* 2.4 Exercises
+** Conceptual
+** Applied
+
+End Pg 57
