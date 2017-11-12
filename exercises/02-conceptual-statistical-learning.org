@@ -1,0 +1,75 @@
+* Exercise 1
+
+For each part a-d indicate whether we would generally expect the
+performance of a flexible statistical learning method to be better or
+worse than an inflexible method.
+
+a) inflexible
+
+b) flexible
+
+c) flexible
+
+d) inflexible
+
+
+* Exercise 2
+
+Explain whether each scenario is a clssification or regression
+problem, and indicate whether we are most intersted in inference or
+prediction. Finally, provide n and p.
+
+a) regression, inference, n=500, p=3
+
+b) classification, prediction, n=20, p=13
+
+c) regression, prediction, n=52, p=3
+
+* Exercise 3
+
+* Exercise 4
+
+Think of some real-life applications for statistical learning.
+
+* Exercise 5
+
+What are the advantages and disadvantages of a very flexible (versus a
+less flexible) approach for regression or classification? Under what
+circumstance might a more flexible approach be preferred to a less
+flexible approach? When might a less flexible approach be preferred?
+
+** Answer:
+
+A very flexible approach will help to minimize the bias introduced by
+your model, this can help you fit your training (and potentially test)
+data very accurately. There is a trade off, though that you risk
+introducing variance into your model, and overfitting the
+data. Additionally, it will likely be harder to interpret the results
+of the model if you're trying to perform inference based on the
+result.
+
+* Exercise 6
+
+Describe the differences between a parametric and a non-parametric
+statistical learning approach. What are the advantages of a parametric
+approach to regression or classification? What are the disadvantages.
+
+** Answer
+
+A parametric approach will often be easier to estimate, and easier to
+understand for the purposes of inference.
+
+A non-parametric approach will be able to more closely fit the data,
+as it is not constrained by model assumptions. It can, however
+introduce overfitting, and may require additional measures to curb
+this overfitting. It will also likely be harder to interpret the
+function that you estimate.
+
+* Exercise 7
+
+The table below provides a training data set containing six
+ovservations, three predictors and one qualitative response variable.
+
+Suppose we wish to use this data set to make a prediction for $Y$ when
+
+$X_1 = X_2 = X_3 = 0$ using K-nearest neighbors.
