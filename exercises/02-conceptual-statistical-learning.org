@@ -4,14 +4,28 @@ For each part a-d indicate whether we would generally expect the
 performance of a flexible statistical learning method to be better or
 worse than an inflexible method.
 
-a) inflexible
+a) inflexible - because with few parameters, you're likely to have a
+simple model
 
-b) flexible
+Discussion note: Maybe it's better to be flexible? Because with bigger
+n, you have more room for degrees of freedom.
 
-c) flexible
+*changing my answer* to "fexible" because with a large number of
+observations, you're able to fit a more comlpex model without
+overfitting.
 
-d) inflexible
+b) flexible - because you'll need to be able to have a flexible model
+to account for the large number of parameters
 
+Discussion note: Maybe this should be inflexible, because with small
+n, you're at greater risk for overfitting.
+
+*changing my answer* to "inflexible" otherwise you're at too high a
+risk of overfitting
+
+c) flexible - a inflexible model will introduce bias
+
+d) inflexible - because you're at risk for overfitting
 
 * Exercise 2
 
@@ -71,5 +85,19 @@ The table below provides a training data set containing six
 ovservations, three predictors and one qualitative response variable.
 
 Suppose we wish to use this data set to make a prediction for $Y$ when
-
 $X_1 = X_2 = X_3 = 0$ using K-nearest neighbors.
+
+a)
+
+| Obs | $X_1$ | $X_2$ | $X_3$ | Y     | Distance |
+|-----+-------+-------+-------+-------+----------|
+|   1 |     0 |     3 |     0 | Red   |        3 |
+|   2 |     2 |     0 |     0 | Red   |        2 |
+|   3 |     0 |     1 |     3 | Red   |    3.162 |
+|   4 |     0 |     1 |     2 | Green |    2.236 |
+|   5 |    -1 |     0 |     1 | Green |    1.414 |
+|   6 |     1 |     1 |     1 | Red   |    1.732 |
+
+b) Green, because the closest is point 5
+c) Red, because the closest 3 are Green, Red, Red
+d) Small, because otherwise we'll underfit
