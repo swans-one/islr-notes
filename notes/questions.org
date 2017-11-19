@@ -10,3 +10,11 @@
 
 - pg 50, that pairs equation, how does it work?
   - ALSO SO FUCKING COOL, holy shit
+* 03 Linear Regression
+- pg 66 - go back and understand these equations.
+- pg 67 - What is the relationship between t-value p-value and
+  confidence intervals?
+- pg 74 - What, mathematicall, does it mean to "hold TV and radio
+  fixed"?
+- pg 82 - Can we talk about confidence interval vs prediction
+  interval?

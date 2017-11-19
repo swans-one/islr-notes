@@ -1,0 +1,318 @@
+* 3 Linear Regression
+
+A simple approach for supervised learning, predicting a quantitative
+response. A good jumping off point for other statistical learning
+methods.
+
+Remember ~Advertising~: ~sales~ versus ~TV~, ~radio~, ~newspaper~
+budgets. If we're giving a spending recommendation, here are some
+questions to address.
+
+1. Is there a relationship between advertising budget and sales.
+2. How strong is the relationship between budget and sales
+3. Which media contribute to sales
+4. How accurately can we estimate the effect of each medium on sales?
+5. How accuractely can we predict future sales?
+6. Is the relationship linear
+7. Is there synergy among the advertising media?
+
+* 3.1 Simple Linear Regression
+
+- simple linear regression :: A straightforward approach for
+     predicting a quantitative response $Y$ on the basis of a single
+     predictor variable $X$.
+
+\begin{equation}
+  Y \approx \beta_0 + \beta_1 X \\
+  e.g. \\
+  sales \approx \beta_0 + \beta_1 \times TV \\
+\end{equation}
+
+In this equation, $\beta_0$ and $\beta_1$ are unknown constants that
+we will be estimating. They are the model /coefficients/ or
+/parameters/. We'll be able to use predictions of them to predict $y$
+
+\begin{equation}
+  \hat{y} = \hat{\beta_0} + \hat{\beta_1} x
+\end{equation}
+
+** 3.1.1 Estimating the Coefficients
+
+Given pairs of data, $(x_i, y_i)$, we're trying to find coefficients
+for a line that most closely fits the data. We define closeness as the
+least squares criteria.
+
+- residual :: Difference between truth and prediction $e_i=y_i-\hat{y}_i$
+- residual sum of squares :: $RSS = e_1^2 + e_2^2 + \cdots + e_n^2$
+
+We can use calculus to minimize these residuals based on the
+coefficients.
+
+\begin{equation}
+  \hat{\beta_1} = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})} \\
+  \hat{\beta_0} = \bar{y} - \hat{\beta_1}\bar{x}
+\end{equation}
+
+Where $\bar{y}$ and $\bar{x}$ are the sample means.
+
+** 3.1.2 Assessing the Accuracy of the Coefficient Estimates
+
+\begin{equation}
+  Y = \beta_0 + \beta_1 X + \varepsilon
+\end{equation}
+
+Recal the error term $\varepsilon$. We assume the error is independent
+of $X$.
+
+- population regression line :: The best linear approximation of the
+     true relationship between X and Y.
+
+It's important to remember that our samples are drawn from a
+population. For example, if we want to know the population mean $\mu$
+given a sample $Y$ we can estimate $\hat{\mu} = \bar{y}$.
+
+- unbiased estimator :: Does not systematically over or under estimate
+     the true parameter.
+
+*Note*: Simple least squares is an unbiased estimator.
+
+How far off will any estimate $\hat{\mu}$ be from $\mu$? We use the
+formula for the standard error
+
+\begin{equation}
+  Var(\hat{\mu}) = SE(\hat{\mu})^2 == \frac{\sigma^2}{n}
+\end{equation}
+
+Where $\sigma$ is the standard deviation of each of the realizations
+of $y_i$ in $Y$.
+
+We can broaden this concept to estimate the standard error of
+$\hat{\beta}_0$ and $\hat{\beta}_1$.
+
+- standard error :: Roughly speaking, telss us the average amount this
+                    estimator differs from the true value.
+- residual standard error :: An estimate of the standard deviation of
+     our error term (estimated from our RSS)
+- confidence intervals :: 95% confidence interval is the range of
+     values such that with 95% probablity the range will contain the
+     true unknown value of the parameter.
+
+The 95% confidence interval can be computed:
+
+\begin{equation}
+\hat{\beta}_1 \pm 2 \dot SE(\hat{\beta}_0)
+\end{equation}
+
+Standard errors can also be used to perform hypothesis tests on teh
+coefficients. We can use a /t-statistic/
+
+\begin{equation}
+  t = \frac{ \hat{\beta}_1 - 0 }{ SE(\hat{\beta}_1) }
+\end{equation}
+
+The distribution of $t$ if there is no relationship looks like a
+normal distribution. So, we can say with some confidence if t is
+outside that normal distribution. We call that a p-value.
+
+** 3.1.3 Assessing the Accuracy of the Model
+
+Given that we've rejected the null hypothesis, we want to ask "To what
+extent does the model fit the data?"
+
+*** Residual Standard Error
+
+Even if we perfectly predict the model coefficients, we're still going
+to have error due to $\varepsilon$.
+
+- Residual Standard Error :: An estimate of the standard deviation of
+     $\varepsilon$. The average amount the response will deviate from
+     the true regression line.
+
+\begin{equation}
+  RSE = \sqrt{ \frac{1}{n - 2} RSS }
+\end{equation}
+
+- RSE is considered a measure of /lack of fit/.
+- RSE is in the units of Y
+- R^2 is a measure in absolute units (0-1)
+- R^2 can still be challenging to interpret, it's hard to know what a
+  good value is.
+
+\begin{equation}
+  R^2 = \frac{ TSS - RSS }{ TSS }
+\end{equation}
+
+- TSS :: total sum of squares, $TSS = \sum(y_i - \bar{y})^2$, total
+         variance in $Y$.
+
+TSS measures total variability before regression is performed, and RSS
+measures the amount of variablility that is left unexplained after
+performing the regression.
+
+* 3.2 Multimple Linear Regression
+
+We have three variables, can't we use them all? We extend our
+equation:
+
+\begin{equation}
+  Y = \beta_0 + \beta_1 X_1 + \beta_2 \X_2 + \cdots + \beta_p X_p + \varepsilon
+\end{equation}
+
+** 3.2.1 Estimating the Regression Coefficients
+
+Now we're trying to minimize our sum of squared residuals based on:
+
+\begin{equation}
+  \hat{y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \hat{\beta}_2 \X_2 + \cdots + \hat{\beta}_p X_p + \varepsilon
+\end{equation}
+
+The estimates for these regression coefficience are computed using
+matrix algebra.
+
+** 3.2.2 Some important Questions
+
+1. Is at least one of the predictors $X_1, X_2, \ldots, X_p$ useful in
+   predicting the response?
+2. Do all the predictors help to explain Y, or only a subset?
+3. How well does the model fit the data?
+4. Gien a set of predictor values, what response value should we
+   predict, and how accurate is our prediction?
+
+*** One: Relationship between the Response and Predictors
+
+We're not just looking at $\beta_1=0$, we're looking at
+$\beta_1=\beta_2=\cdots=\beta_p=0$. The alternative hypothesis is "at
+least one of $\beta_j$ is non-zero."
+
+We use an /F-statistic/
+
+\begin{equation}
+  F = \frac{ (TSS - RSS) / p }{ RSS / (n - p - 1) }
+\end{equation}
+
+If there is no relation, we expect $F$ to be close to 1. Otherwise, if
+there is a relationship, F should be greater than 1.
+
+*Note:* To get a t-value and p-value for each variable in the model,
+we can do an F-test omiting that variable, and see the partial effect
+of adding the variable to the model.
+
+All of the concepts that we've discussed in this chapter rely on $n >>
+p$. If $p > n$ we are in a high dimensionality setting.
+
+*** Two: Deciding on Important Variables
+
+We can use criteria to select the best model
+  - Mallow's $C_p$
+  - Akaike information criterion (AIC)
+  - Bayesian information criterion (BIC)
+
+There are many models to explore, and we can use some methods to
+shrink the space.
+
+- forward selection :: Start from the null model and add the best
+     parameters one at a time (Lowest RSS model).
+  - Greediest, can always be used
+  - Sometimes parameters become irrelevant
+- Backward selection :: Start from the full model and prune variables
+     with the largest p-value
+  - Can't be used if $p > n$
+- Mixed selection :: A combination of forward and backward. Do
+     forward, but prune too high p-value as you go.
+  - Fixes the problems of above
+
+*** Three: Model fit
+
+We can still use R^2 and RSE, and we still rely on the assumption of
+independence of the error terms.
+
+Plot your residuals!
+
+*** Four Predictions
+
+We can make predictions
+
+- confidence interval :: ???
+- prediction interval :: ???
+
+* 3.3 Other Considerations in the Regression Model
+** 3.3.1 Qualitative Predictors
+
+Sometimes we have variables that are not quantitative.
+
+*** Predictors with Only two levels
+
+If there are only two levels, we can make an indicator variable or
+dummy variable.
+
+- dummy variable :: A variable that takes on 0 or 1 in the case of a
+                    binary outcome (e.g. male or female).
+
+When you add a dummy variable to the model, the intercept then
+represents the base case (e.g. male) and the dummy represents when you
+chage to the other case (e.g. female).
+
+*** Qualitative Predictors with More than Two levels
+
+Then you have to create more dummy variables, If you have $k$ cases,
+you need to make $k-1$ dummy variables to distinguish between
+them. It's one less, because one of your cases is going to be the base
+case (Represented by the intercept).
+
+** 3.3.2 Extensions of the Linear Model
+
+- Addatvie assumption :: The effects of changes in a predictor $X_j$
+     on the response $Y$ is independent of the values of the other
+     predictors.
+- Linear assumption :: changes in the response $Y$ due to a one
+     unit-change in $X_j$ is constant, regardless of the value of
+     $X_j$.
+
+Here are some classical approaches to relaxing these assumptions.
+
+*** Removing the Additive Assumption
+
+If changes in variables together change the outcome, this is called an
+interaction effect.
+
+An example could look like:
+
+\begin{equation}
+  sales = \beta_0 + \beta_1 \dot TV + \beta_2 \dot radio +  \beta_3 \dot TV \dot radio + \varepsilon
+\end{equation}
+
+We capture this interaction effect by adding a parameter in the model
+that is a multiple of the other two.
+
+- main effects :: A model without any interaction effects
+
+- hierarchical principle :: If we include an interaction in a model,
+     we should also include their main effects, even if their
+     coefficients are not significant.
+
+*** Non Linear Relationships
+
+We cans imply include a transformed variable:
+
+\begin{equation}
+  sales = \beta_0 + \beta_1 \dot horsepower + \beta_2 \dot horsepower^2 + \varepsilon
+\end{equation}
+
+And the result is /still a linear model/.
+
+** 3.3.3 Potential Problems
+
+1. Non-linearity of the response-predictor relationships
+2. Correlation of error terms
+3. Non-constant variance of error terms
+4. Outliers
+5. High-leverage points
+6. Collinearity
+
+In practice identifying and overcoming these problems is as much an
+art as a science. We're only giving a brief summary of these here.
+
+
+* 3.4 The Marketing Plan
+
+end 104
