@@ -155,7 +155,7 @@ We have three variables, can't we use them all? We extend our
 equation:
 
 \begin{equation}
-  Y = \beta_0 + \beta_1 X_1 + \beta_2 \X_2 + \cdots + \beta_p X_p + \varepsilon
+  Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p + \varepsilon
 \end{equation}
 
 ** 3.2.1 Estimating the Regression Coefficients
@@ -163,7 +163,7 @@ equation:
 Now we're trying to minimize our sum of squared residuals based on:
 
 \begin{equation}
-  \hat{y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \hat{\beta}_2 \X_2 + \cdots + \hat{\beta}_p X_p + \varepsilon
+  \hat{y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \hat{\beta}_2 X_2 + \cdots + \hat{\beta}_p X_p + \varepsilon
 \end{equation}
 
 The estimates for these regression coefficience are computed using
@@ -261,7 +261,7 @@ case (Represented by the intercept).
 
 ** 3.3.2 Extensions of the Linear Model
 
-- Addatvie assumption :: The effects of changes in a predictor $X_j$
+- Additive assumption :: The effects of changes in a predictor $X_j$
      on the response $Y$ is independent of the values of the other
      predictors.
 - Linear assumption :: changes in the response $Y$ due to a one
