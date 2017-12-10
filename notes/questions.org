@@ -28,3 +28,17 @@
   - Talk about what they mean in words
 
 - Can we talk about the potential problems?
+
+- Leverage, maybe I should understand this?
+
+- I still want to better understand how collinearity affects models.
+  - Does the wildly differen parameter estimate fit with the way that
+    a given variable affects another?
+
+** Exercise Questions
+
+- Why the focus on regression without an intercept. It seems, silly?
+  - Is it because you can always normalize your response to have mean zero?
+  - Still, these questions seem unmotivated
+
+- 14.f -- I don't understand this
