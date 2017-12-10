@@ -15,7 +15,9 @@ college <- college[,-1]
 ## c)
 
 summary(college) # i
+
 pairs(college[,1:10]) # ii
+
 plot(
     college$Private,
     college$Outstate,
@@ -45,9 +47,9 @@ auto <- read.table("../labs/data/Auto.data", header=TRUE, na.strings="?")
 auto <- na.omit(auto)
 
 ## a)
-##    qualitative: year, origin, name
+##    qualitative:  origin, name
 ##    quantitative: mpg, displacement, horsepower, weight, acceleration
-##    Maybe either: cylinders
+##    Maybe either: cylinders, year
 
 ## b)
 
@@ -113,7 +115,7 @@ pairs(~ crim + zn + indus + tax, data=Boston)
 
 ## c)
 
-cor(Boston)[1,]
+cor(Boston)["crim",]
  ##       crim          zn       indus        chas         nox          rm
  ## 1.00000000 -0.20046922  0.40658341 -0.05589158  0.42097171 -0.21924670
  ##        age         dis         rad         tax     ptratio       black
@@ -171,4 +173,8 @@ sum(Boston$rm > 7) # 64
 sum(Boston$rm > 8) # 13
 sum(Boston$rm > 9) # 0
 
-summary(Boston[Boston$rm > 8])
+summary(Boston[Boston$rm > 8,])
+
+par(mfrow=c(2, 1))
+hist(Boston$medv[Boston$rm > 8])
+hist(Boston$medv)
