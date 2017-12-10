@@ -23,9 +23,13 @@ questions to address.
      predictor variable $X$.
 
 \begin{equation}
-  Y \approx \beta_0 + \beta_1 X \\
-  e.g. \\
-  sales \approx \beta_0 + \beta_1 \times TV \\
+  Y \approx \beta_0 + \beta_1 X
+\end{equation}
+
+e.g.
+
+\begin{equation}
+  sales \approx \beta_0 + \beta_1 \times TV
 \end{equation}
 
 In this equation, $\beta_0$ and $\beta_1$ are unknown constants that
@@ -49,8 +53,11 @@ We can use calculus to minimize these residuals based on the
 coefficients.
 
 \begin{equation}
-  \hat{\beta_1} = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})} \\
-  \hat{\beta_0} = \bar{y} - \hat{\beta_1}\bar{x}
+    \hat{\beta_1} = \frac{ \sum_{i=1}^n(x_i - \bar{x})(y_i - \bar{y}) }{ \sum_{i=1}^n(x_i - \bar{x})^2 }
+\end{equation}
+
+\begin{equation}
+ \hat{\beta_0} = \bar{y} - \hat{\beta_1}\bar{x}
 \end{equation}
 
 Where $\bar{y}$ and $\bar{x}$ are the sample means.
@@ -80,7 +87,7 @@ How far off will any estimate $\hat{\mu}$ be from $\mu$? We use the
 formula for the standard error
 
 \begin{equation}
-  Var(\hat{\mu}) = SE(\hat{\mu})^2 == \frac{\sigma^2}{n}
+  Var(\hat{\mu}) = SE(\hat{\mu})^2 = \frac{\sigma^2}{n}
 \end{equation}
 
 Where $\sigma$ is the standard deviation of each of the realizations
@@ -315,4 +322,81 @@ art as a science. We're only giving a brief summary of these here.
 
 * 3.4 The Marketing Plan
 
-end 104
+*** Is there a relationship beteween advertising sales and budget?
+
+We can fit a multiple regression model and test against the null
+hypothesis:
+
+\begin{equation}
+  H_0 : \beta_{TV} = \beta_{radio} = \beta_{newspaper} = 0
+\end{equation}
+
+*** How Strong is the relationship?
+
+Use either:
+
+- RSE, Residual standard error, which is a measure in the same units
+  as the predictor. Here it's 1,681, with average response of 14,022
+- R^2: 90%
+
+*** Which media contribute to sales?
+
+- We can look at the p-values
+- tv, and radio have low p-values
+- newspaper is not significatn
+
+*** How large is the effect of each medium on sales?
+
+We can look at the 95% confidence interval for those parameters
+
+- radio :: (0.172, 0.206)
+- TV :: (0.043, 0.049)
+- newspaper :: (-0.013, 0.011)
+
+*** How accurately can we predict future sales?
+
+- For the mean, we can find it within some confidence interval
+- For an individual prediction, we should use the prediction interval
+  - Prediction intervals will be larger
+
+*** Is the relationship linear?
+
+- We can use the residual plots to look at the linearity
+  - If they're linear there should be no pattern
+-
+
+*** Is there synergy among the advertising media?
+
+- By including interaction terms we get a lot more explanatory power
+
+* 3.5 Comparison of Linear Regression with K-Nearest Neighbors
+
+- Linear regression is a parametric approach
+  - Easy to fit
+  - /but/ they may strong assumptions about the structure of $f(X)$.
+
+- K-Nearest Neighbors Regression :: A non-parametric approach to
+     regression, related to KNN classification.
+
+The KNN regression algorithm is specified (for a given K) as the
+average of the K closest points from the training set:
+
+\begin{equation}
+\hat{f}(x_0) = \frac{1}{K} \sum_{x_i \in N_0} y_i
+\end{equation}
+
+Where $N_0$ are the $K$ closest points to $x_0$.
+
+KNN regression may perform better on highly non-linear data,
+especially with a good choice of K. However, it may not perform well
+when the data is highly linear, or when there are a lot of predictor
+variables.
+
+
+* 3.6 Lab: Linear Regression
+
+See ~labs/03-linear-regression.r~
+
+* 3.7 Excercises
+
+See ~exercises/03-applied.r~ and ~exercises/03-conceptual.org~

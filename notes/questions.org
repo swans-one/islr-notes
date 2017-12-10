@@ -18,3 +18,13 @@
   fixed"?
 - pg 82 - Can we talk about confidence interval vs prediction
   interval?
+
+** Overall questions
+
+- Can we talk about the relationships between RSS, SE, TSS, and the rest
+  of those?
+  - Write them down
+  - Talk about which are independently useful
+  - Talk about what they mean in words
+
+- Can we talk about the potential problems?
