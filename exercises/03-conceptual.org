@@ -1,0 +1,120 @@
+* Excercise 1
+
+** Question
+
+Describe the null hypothesis to which the p-values give in Table 3.4
+correspond.
+
+| Coefficient |   Std. |  error | t-statistic | p-value  |
+|-------------+--------+--------+-------------+----------|
+| Intercept   |  2.939 | 0.3119 |        9.42 | < 0.0001 |
+| TV          |  0.046 | 0.0014 |       32.81 | < 0.0001 |
+| radio       |  0.189 | 0.0086 |       21.89 | < 0.0001 |
+| newspaper   | −0.001 | 0.0059 |       −0.18 | 0.8599   |
+
+** Answer
+
+The null hypothesis for the first row is:
+
+\begin{equation}
+H_0 : \beta_0 = 0
+\end{equation}
+
+While the null hypotheses for the various parameters can be written
+as:
+
+\begin{equation}
+H_0 : \beta_{TV} = 0
+\end{equation}
+
+That is, for each of these parameters, the null hypothesis is that the
+this predictor has no effect on predicting sales. When we look at the
+probabilities, we're looking at the probability that the given
+null-hypothesis is true. So, we can see that the probability that
+newspaper has no affect on sales is rather high, with a p-value of
+0.8599. On the other hand, there is almost certainly a non-zero
+relationship between TV and sales, with a p-value < 0.0001.
+
+* Exercise 2
+
+** Question
+
+Carefully explain the differences between the KNN classifier and the
+KNN regression methods.
+
+** Answer
+
+The KNN classifier has a qualitative response variable, this means the
+output is one of several classes. The KNN regression, on the other
+hand, has a quantitative response variable, meaning the output is
+going to be a number.
+
+To achieve this, the classifier predicts based on the most common
+class of the K-nearest neighbors, while the regressor predicts based
+on the average response of the K-nearest neighbors.
+
+* Exercise 3
+
+a) iii - For a fixed value of IQ and GPA males ear more on average
+   than females provided GPA is high enough.
+
+   While, Female base salary is higher than males, in the interaction
+   with GPA, female salary increases less quickly as GPA rises than
+   male salary
+
+b) 1000 * (50 + 20 * 4.0 + 0.07 * 110 + 1 * 35 + 0.01 * 4.0 * 110 + -10 * 4.0 * 1) = $137,100
+
+c) False. The effect may be small but the very robust. The confidence
+   interval may be small enough not to include zero. In some sense,
+   every number is close to zero.
+
+* Exercise 4
+
+** Question
+
+I collect a set of data (n = 100 observations) containing a single
+predictor and a quantitative response. I then fit a linear regression
+model to the data, as well as a separate cubic regression, i.e.
+$Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \varepsilon$
+
+a) Supose the true relationship between $X$ and $Y$ is linear. Which
+model will have a lower training RSS and why?
+
+b) Answer (a) using test rather than training RSS
+
+c) Suppose the true relationship is non-linear but we don't know
+how. which training RSS will be lower.
+
+d) Answer (c) using test rather than training rss
+
+** Answer
+
+a) The cubic regression should always have an RSS that is at least
+equal, but usually less than the linear regression. It should be able
+to fit the exact same linear model by setting $\beta_2$ and $\beta_3$
+to zero. Anything other than that, should have a lower RSS.
+
+b) With test data, it is likely that the RSS for the linear model will
+be better. This is because the cubic model is likely to overfit
+variations in the training data where the linear model would not. That
+is, the cubic model has higher variance.
+
+c) As in question (a) the training RSS for the cubic model should
+alwasy be equal or less than the linear model.
+
+d) In this case, we likely do not have enough information to tell. We
+would need to know in what ways the data was non-linear, to what
+extent it was non-linear and how much variation exists in the training
+data.
+
+* Exercise 5
+
+Come back to this later.
+
+* Exercise 6
+
+Can we solve this together?
+
+* Exercise 7
+
+Come back to this later.
