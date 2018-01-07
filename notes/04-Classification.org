@@ -19,29 +19,281 @@ chapters.
 
 * 4.1 An Overview of Classification
 
+We'll be using the ~Default~ data set.
+
+- Predicting whether an individual will default on their credit card
+  payment.
+- Based on:
+  - Anual Income (~income~)
+  - Monthly credit card balance (~balance~)
+- Overall default rate is about 3%
+
 * 4.2 Why Not Linear Regression?
+
+Why isn't linear regression appropriate for qualitative responses?
+
+If we're predicting a condition in a hospital, we could encode our
+response like this:
+
+\begin{equation}
+  Y = \left \{
+      \begin{matrix}
+         1 & stroke \\
+         2 & drug\_overdose \\
+         3 & seizure
+      \end{matrix}
+      \right.
+\end{equation}
+
+But this ordering implies that there's an ordering to these variables,
+that ~drug_overdose~ is in between ~stroke~ and ~seizure~, and that
+the difference between ~stroke~ and ~drug_overdose~ is the same as the
+difference between ~drug_overdose~ and ~seizure~.
+
+But! it would be equally reasonable to mix up the order of these,
+implying a completely different set of relationships. All of this
+seems like nonsense.
+
+Things are better if we can encode a binary response
+
+\begin{equation}
+  Y = \left \{
+      \begin{matrix}
+         0 & stroke \\
+         1 & drug\_overdose
+      \end{matrix}
+      \right.
+\end{equation}
+
+Here, we could fit a linear regression and predict ~drug_overdose~ if
+$\hat{Y} > 0.5$ and ~stroke~ otherwise.
+
+Doing this works, and it can be shown that:
+
+\begin{equation}
+  X\hat{\beta} = Pr(drug\_overdose | X)
+\end{equation}
+
+Which is equivalent to LDA. It doesn't work so well with multiple
+classes though, because linear regression can give us "probabilities"
+outside of $[0, 1]$.
+
 
 * 4.3 Logistic Regressions
 
+Consider the ~Default~ data set, where the response variable ~default~
+is either ~Yes~ or ~No~. Rather than modeling this directly, we'll
+model the /probability/ that $Y$ belongs to a particular category.
+
+\begin{equation}
+  Pr(default = Yes|balance)
+\end{equation}
+
 ** 4.3.1 The Logistic Model
+
+A linear function is unsatisfactory. Here comes the logistic function.
+
+\begin{equation}
+  p(X) = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\end{equation}
+
+To fit this model, we'll use /maximum likelihood/ which will be
+discussed in the next section.
+
+This produces a nice S-shaped curve that never goes below 0 or above 1.
+
+We can transform this fuctional form into something that relates a
+/log-odds/ or /logit/ function to a linear model.
+
+\begin{equation}
+  log \left( \frac{p(X)}{1 - p(X)} \right) = \beta_0 + \beta_1 X
+\end{equation}
+
+Note that in this model, a one unit change in $X$ corresponds to a
+change in the log odds of size $\beta_1$. However, the log odds are
+non-linear, and rely on the current value of $X$ to determine the size
+of that change.
+
+This can make the effects of a change in $X$ hard to interpret, but we
+can know for certain the direction those changes will produce in the
+response.
 
 ** 4.3.2 Estimating the Regression Coefficients
 
+- maximum likelihood :: A general method for firtting model
+     coefficients.
+
+The /maximum likelihood/ method has some nice statistical
+properties. The intuition is:
+
+- find estimates for $\beta_0$ and $\beta_1$
+- such that the predicted probability $\hat{p}(x_i)$ of default
+- corresponds as closedly as possible to the observed status
+
+We can write this down as a /likelihood function/
+
+\begin{equation}
+  l(\beta_0, \beta_1) = \prod_{i:y_i=1} p(x_i) \prod_{i':y_i'=0} (1-p(x_{i'}))
+\end{equation}
+
+We want to choose $(\beta_0, \beta_1)$ to /maximize/ this function.
+
+When we estimate this, we can end up with a set of results that look
+very similar to the results of a linear regression model.
+
 ** 4.3.3 Making Predictions
+
+Given estimated coefficients, we can compute the predicted
+probablility of default.
+
+\begin{equation}
+  \hat{p}(X)
+    = \frac
+      {    e^{\hat{\beta}_0 + \hat{\beta}_1 X}}
+      {1 + e^{\hat{\beta}_0 + \hat{\beta}_1 X}}
+\end{equation}
+
+Note that in this data set, the probability of default for a \$1,000
+debt is 0.576%, while the probability of default for a \$2,000 debt is
+58.6%, which shows some of the nonlinearity in the response.
+
+We can use dummy variables in the predictors as well.
 
 ** 4.3.4 Multiple Logistic Regression
 
+We can generalize the logit function as follows:
+
+\begin{equation}
+  log \left( \frac{p(X)}{1 - p(X)} \right)
+    = \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p
+\end{equation}
+
+With a corresponding change to the function for $p(X)$. We can still
+use the maximum likelihood method for estimating coefficients.
+
+- confounding :: The magnitude and direction of coefficients can
+                 change dramatically when we introduce other relevant
+                 variables.
+
 ** 4.3.5 Logistic Regression for >2 Response Classes
 
-* 4.4 Linear Discriminatn Analysis
+What if we have multiple classes? It is possible to use logistic
+regression for this, and people do. However Linear
+Discriminant Analysis is better suited for it.
+
+That said, packages exist in R to do multi-class logistic regression.
+
+* 4.4 Linear Discriminant Analysis
+
+With logistic regression we model $Pr(Y = k | X = x)$.
+
+With LDA we model the distribution of $X$ separately for each response
+class in $Y$ and use Bayes' theorem to flip these around.
+
+Why do we need another method when we have logistic regression?
+
+- When classes are well separated the parameter estimates for logistic
+  regression are surprisingly unstable
+- If $n$ is small, and the distributions of predictors $X$ is
+  approximately normal in each of the classes, then the linear
+  discriminat model is more stable than the LR model.
+- LDA is popular with multiple classes.
 
 ** 4.4.1 Using Bayes' Theorem for Classification
 
+We want to classify an observation into one of $K$ classes, with $K \geq 2$.
+
+- prior :: $\pi_k$, the probability that a randomly chosen observation
+           comes from the \(k\)th class
+- density function of X :: $f_k(x) \equiv Pr(X=x|Y=k)$, the probablity
+     that a particular observation looks like it does, given that we
+     know what class it is in.
+- posterior :: p_k(X) = Pr(Y = k|X), the probability that an
+               observation $x$ belongs to the \(k\)th class.
+
+Given the prior, and the density function, Bayes' theorem states that
+
+\begin{equation}
+  p_k(x) = Pr(Y = k | X = x)
+  = \frac{ \pi_k f_k(x) }
+         { \sum_{l=1}^K \pi_l f_l(x) }
+\end{equation}
+
+We know that the bayes estimator is the perfect estimator, if we can
+correctly specifiy $f_k(X)$, but this is difficult.
+
+These sections discusses some techniques for estimating $f_k(X)$,
+given some assumptions.
+
 ** 4.4.2 Linear Discriminant Analysis for p = 1
+
+In the case of one predictor $p = 1$. How can we estimate $f_k(x)$?
+
+1. Assume $f_k(x)$ is /Gaussian/.
+2. Find the mean $\mu_k$ and variance $\sigma_k^2$ for the \(k\)th
+   class
+3. Assume $\sigma_1^2 = \ldots = \sigma_K^2$
+4. Plug the functional form of the Gaussian with given mean and
+   variance in as $f_k(x)$ into our equation for $p_k(x)$.
+
+Now we have an estimator for $p_k(x)$!
+
+- linear discriminant analysis (LDA) :: A method for approximating the
+     bayes classifier by plugging in estimates for $\pi_k$, $\mu_k$,
+     and $\sigma^2$ into our Bayes' formula.
+
+- discriminant function :: $\hat{\delta}_k(x)$, A function that
+     discriminates which class a given $x$ belongs to. A given $x$ is
+     predicted to belong to the class $k$ for which
+     $\hat{\delta}_k(x)$ is largest.
+
+\begin{equation}
+  \hat{\delta}_k(x)
+    =       x
+      \cdot \frac{ \hat{\mu}_k   }{   \hat{\sigma}^2 }
+      -     \frac{ \hat{\mu}_k^2 }{ 2 \hat{\sigma}^2 }
+      +     log( \hat{\pi}_k )
+\end{equation}
+
+This is a /linear/ function, because the functional form is linear in
+$x$. This means that for a single predictor, there will be an easy to
+interpret decision boundary.
 
 ** 4.4.3 Linear Discriminant Analysis for p > 1
 
+With more predictors, we make a similar simplifying assumption. We
+assume $X = (X_1, X_2, \ldots, X_p)$ is drawn from a /multivariate
+Gaussian/
+
+A multivariate gaussian is described by
+
+\begin{equation}
+  X \sim N (\mu, \mathbf{\Sigma})
+\end{equation}
+
+Where:
+- $\mu$ is the mean of $X$, a $p$ length vector
+- $\mathbf{\Sigma}$ is $Cov(X)$ the $p \times p$ covariance matrix of
+  $X$.
+
+From this functional form, we can derive a discriminant function
+$\delta_k(x)$ that is similar to that of the case where $p=1$.
+
+*** Setting thresholds
+
+If we're unhappy with the performance of our classifier, we can much
+around with the thresholds LDA uses to predict one class or another.
+
+How do we know if we're happpy with the performance?
+
+1. Look at the confusion matrix
+2. Look at the specificity
+3. Look at the ROC curve
+
 ** 4.4.4 Quadratic Discriminant Analysis
+
+This relaxes some of the linearity constraints and can be a good
+choice when we have a lot of data.
 
 * 4.5 A Comparison of Classification Methods
 

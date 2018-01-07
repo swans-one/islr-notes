@@ -43,3 +43,27 @@
 
 - 14.f -- I don't understand this
 * 04 Classification
+- pg 131 predict default yes for any individual for whom p(balance) >
+  0.5. Do they mean for whom p(default) > 0.5?
+  - Answer: The notation $p(balance)$ is shorthand for
+    p(default=Yes|balance)
+
+- pg 133 Why do we want to maximize /this/ likelihood function?
+
+- pg 137/138 I feel like I've seen multi-class logistic regression
+  very often, am I mistaken? Is it bad practice? Or is it something
+  else disguised as logistic regression.
+
+- pg 138 can we write out these probablities and "flipping around"?
+  And Bayes Theorem?
+
+- pg 138 Can we talk about this "density function".
+
+- pg 140 Where did $\delta_k(x)$ come from?
+
+- pg 145 can we talk about the confusion matrix, sensitivity and specificity?
+
+- pg 147 This graph seems cool to talk about. Let's talk about the
+  impact of adjusting this threshold
+
+- pg 148 Can we talk about the ROC curve too?
