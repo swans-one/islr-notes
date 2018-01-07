@@ -1,0 +1,68 @@
+* 4 Classification
+
+Regression assumes the response variable is quantitative. Often,
+though, the response is qualitative (categorical).
+
+- classification :: approaches for predicting qualitative responses.
+
+Often classification methods predict a probability of each class using
+regression techniques.
+
+We discuss 3 here:
+
+- Logistic regression
+- Linear discriminant analysis
+- K-nearest neighbors
+
+We'll discuss more computationally expensive techniques in later
+chapters.
+
+* 4.1 An Overview of Classification
+
+* 4.2 Why Not Linear Regression?
+
+* 4.3 Logistic Regressions
+
+** 4.3.1 The Logistic Model
+
+** 4.3.2 Estimating the Regression Coefficients
+
+** 4.3.3 Making Predictions
+
+** 4.3.4 Multiple Logistic Regression
+
+** 4.3.5 Logistic Regression for >2 Response Classes
+
+* 4.4 Linear Discriminatn Analysis
+
+** 4.4.1 Using Bayes' Theorem for Classification
+
+** 4.4.2 Linear Discriminant Analysis for p = 1
+
+** 4.4.3 Linear Discriminant Analysis for p > 1
+
+** 4.4.4 Quadratic Discriminant Analysis
+
+* 4.5 A Comparison of Classification Methods
+
+* 4.6 Lab: Logistic Regression, LDA, QDA, and KNN
+
+** 4.6.1 The Stock Market Data
+
+** 4.6.2 Logistic Regression
+
+** 4.6.3 Linear Discriminant Analysis
+
+** 4.6.4 Quadratic Discrinimant Analysis
+
+** 4.6.5 K-Nearest Neighbors
+
+** 4.6.6 An Application to Caravan Insurance Data
+
+* 4.7 Exercises
+
+** Conceptual
+
+** Applied
+
+end 173
