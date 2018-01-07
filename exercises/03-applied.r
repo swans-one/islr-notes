@@ -59,6 +59,8 @@ par(mfrow=c(2,2))
 plot(lm.auto)
 
 ## e)
+Auto$origin <- as.factor(Auto$origin)
+
 lm.auto.2 <- lm(mpg ~ displacement + weight + year * origin, data=Auto)
 summary(lm.auto.2)
 
@@ -309,10 +311,29 @@ plot(Boston$crim, Boston$lstat)
 plot(Boston$crim, Boston$medv)
 
 ## b)
-summary(lm(crim ~ ., data=Boston))
+bost.full <- lm(crim ~ ., data=Boston)
+summary(bost.full)
 
 ## We can reject the null hypothesis for:
 ##    - zn, dis, rad, black, medv
+
+b.names <- names(Boston)[-1]
+coefs <- rep(0, length(names(Boston)) - 1)
+for (i in seq_along(b.names)) {
+    formula <- paste("crim ~", b.names[i])
+    coefs[i] <- coef(lm(formula, data=Boston))[2]
+}
+print(coefs)
+
+x <- coefs
+y <- coef(bost.full)[-1]
+
+plot(x[-4], y[-4])
+
+
+
+
+
 
 ## c) Very different!
 
