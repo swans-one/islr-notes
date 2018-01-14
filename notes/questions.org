@@ -67,3 +67,5 @@
   impact of adjusting this threshold
 
 - pg 148 Can we talk about the ROC curve too?
+
+- pg 158 How does the `contrasts` function work?
