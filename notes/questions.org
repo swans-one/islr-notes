@@ -69,3 +69,58 @@
 - pg 148 Can we talk about the ROC curve too?
 
 - pg 158 How does the `contrasts` function work?
+
+** Sensitivity, Specificity, Precision, Recall, Power, Type I error, Type II error
+
+Can we talk through all these definitions in the following formats?
+Come up with mneumonics for them? And why they're useful?
+
+
+|           |       | True |      |       |
+|-----------+-------+------+------+-------|
+|           |       | Yes  | No   | Total |
+|-----------+-------+------+------+-------|
+| Predicted | Yes   | (TP) | (FP) | P^    |
+|           | No    | (FN) | (TN) | N^    |
+|-----------+-------+------+------+-------|
+|           | Total | P    | N    |       |
+
+
+TP/P :: sensitivity
+TN/N :: specificity
+
+TP/P^ :: precision
+TP/P :: recall
+
+FP/N :: Type I Error
+FN/P :: Type II Error
+
+TP/P :: power
+
+#+BEGIN_SRC text
+     Yes             No
++-------------+-------------+
+|          No (pred)        |
+|         ____|____         |
+|        /    |    \        |
+|       /     |     \       |
+|      |      |      |      |
+|      |  Yes (pred) |      |
+|      |      |      |      |
+|       \     |     /       |
+|        \____|____/        |
+|             |             |
+|             |             |
++-------------+-------------+
+#+END_SRC
+* 05 Resampling Methods
+- pg 184 -- talk about bias variance trade off
+  - I need a better demonstration of how this works:
+
+    #+BEGIN_QUOTE
+    Since the mean of many highly correlated quantities has higher
+    variance than does the mean of many quantities that are not as
+    highly correlated.
+    #+END_QUOTE
+
+  - What does that quote mean??
