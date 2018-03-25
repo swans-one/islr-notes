@@ -135,3 +135,49 @@ mean(qda.class == Smarket.2005$Direction)
 ############################
 
 ## The `knn` function is part of the `class` library
+
+train <- (Smarket$Year < 2005)
+Smarket.2005 <- Smarket[!train,]
+Direction.2005 <- Smarket.2005$Direction
+
+train.X <- cbind(Smarket$Lag1, Smarket$Lag2)[train,]
+test.X <- cbind(Smarket$Lag1, Smarket$Lag2)[!train,]
+train.Direction <- Smarket$Direction[train]
+
+## KNN with k=1
+set.seed(1)
+knn.pred <- knn(train.X, test.X, train.Direction, k=1)
+length(knn.pred)
+mean(knn.pred == Direction.2005)
+table(knn.pred, Direction.2005)
+
+## KNN with k=3
+set.seed(1)
+knn.pred <- knn(train.X, test.X, train.Direction, k=3)
+length(knn.pred)
+mean(knn.pred == Direction.2005)
+table(knn.pred, Direction.2005)
+
+
+##
+## 4.6.6 An application to Caravan Insurance Data
+#################################################
+
+
+## The `Caravan` dataset is part of the `ISLR` library.
+dim(Caravan)
+
+## We want to `standardize` the data
+standardized.X <- scale(Caravan[,-86])
+c(var(Caravan[,1]), var(standardized.X[,1]))
+
+test <- 1:1000
+train.X <- standardized.X[-test,]
+test.X <- standardized.X[test,]
+train.Y <- Caravan$Purchase[-test]
+test.Y <- Caravan$Purchase[test]
+
+set.seed(1)
+knn.pred <- knn(train.X, test.X, train.Y, k=1)
+mean(test.Y != knn.pred)
+mean(test.Y != "No")
