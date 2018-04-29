@@ -124,3 +124,7 @@ TP/P :: power
     #+END_QUOTE
 
   - What does that quote mean??
+
+- pg 190 -- Bootstrap questions
+  - why do we sample with replacement?
+  - How big does $B$ need to be?
