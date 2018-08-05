@@ -1,0 +1,274 @@
+* 6 Linear Model Selection and Regularization
+- Linear Models have a lot of advantages in inference
+- There are ways other than least squares to fit a model
+
+New methods of fitting (other than least sqares) can lead to better
+prediction accuracy and better model interpretability.
+
+- Prediction Accuracy :: If $n$ is not much larger than $p$ there can
+     be a lot of variability in the least squares fit (from
+     overfitting). This leads to poor predictive accuracy.
+- Model Interpretability :: Often, some or many variables are not
+     associated with the response. If we perform feature selection, we
+     can make a model smaller and easier to interpret.
+
+There are a few alternatives to lease squares we will consider:
+
+- subset selection :: identifying a subset of the p predictors we
+     believe to be related to the response.
+
+- Shrinkage :: Fit a model with all $p$ predictors. However, estimated
+               coefficients are shrunken towards zero relative to the
+               least squares estimates.
+  - The shrinkage (aka /regularization/) reduces variance
+  - It's possible that this performs feature selection (shrinking
+    coefficients to zero)
+
+- Dimension Reduction :: Projecting the $p$ predictors into an
+     $M$-dimensional subspace, where $M < p$. Then we fit the model on
+     those $M$ predictors.
+
+* 6.1 Subset Selection
+- best subset
+- stepwise model selection
+
+** 6.1.1 Best Subset Selection
+
+Look at all $2^p$ possible subsets of variables and choose the best
+one.
+
+- when choosing between models with the same number of paramters, we
+  can use RSS
+- When choosing between those with different parameters, you have to
+  be careful using RSS or $R^2$ (training error). Should use test
+  error instead.
+
+For non-least squares model, we need something other than RSS.
+
+- deviance :: negative two times the maximized log-likelihood.
+  - Works like RSS for a broader class of models
+  - smaller is better
+
+** 6.1.2 Stepwise Selection
+
+*** Forward stepwise selection
+
+- forward stepwise selection :: computationally efficient alternative
+     to best subset selection.
+
+steps:
+
+1. Start with an empty model
+2. Consider every possible model with one more variable
+   1. Choose the best model
+   2. Note the cross-validated prediction error
+3. Repeat (2) until you have $p$ variables in the model
+4. Choose the model with the overall best CV prediction error
+
+This is a procedure in $p^2$ time, rather than $2^p$ time. A dramtic
+improvement.
+
+While this approach does well in practice it is not guaranteed to find
+the best possible model.
+
+*** Backward stepwise selection
+
+Like forward stepwise selection, but you start with a full model, and
+remove the worst term in each step. Then choose the best performing of
+all those models.
+
+*** Hybrid Approach
+
+Iteratively add and remove terms as you build up your model.
+
+*Note*: All stepwise approaches perform similarly well.
+
+** 6.1.3 Choosing the Optimal Model
+
+- All of the subset approaches require a method for comparing models
+  to select the /best/.
+- A model containing all predictors will always have the lowest $R^2$
+  or RSS.
+
+We need to estimate the training error, there are two common
+approaches.
+
+1. We can /indirectly/ estimate test error by making an /adjustment/ to
+   the training error to account for bias from overfitting.
+2. We can /directly/ estimate the test error using either a vaildation
+   set or cross-validation approach.
+
+*** $C_p$
+
+Here $C_p$ is an estimate of the test MSE.
+
+\begin{equation}
+  C_p = \frac{1}{n} ( RSS + 2 d \hat{\sigma}^2 )
+\end{equation}
+
+where $d$ is the number of predictors in the model and $\hat{sigma}^2$
+is an estimate of teh variance of the error $\varepsilon$ associated
+with each response measurement.
+
+*** AIC
+
+Defined for a large class of models fit by maximum likelihood.
+
+In the case of least squares, AIC can be written as:
+
+\begin{equation}
+  AIC = \frac{1}{n \hat{\sigma}^2} ( RSS + 2 d \hat{\sigma}^2 )
+\end{equation}
+
+So, for least squares, AIC and $C_p$ are proportional to eachother.
+
+*** BIC
+
+Derived from a bayesian point of view, but looks similar to those
+above.
+
+\begin{equation}
+  BIC = \frac{1}{n \hat{\sigma}^2} ( RSS + log(n) d \hat{\sigma}^2 )
+\end{equation}
+
+Because $log(n) > 2$ for any $n > 7$, the BIC statistic generally
+places a heavier penalty on models with many variables compared to
+$C_p$.
+
+*** Adjusted $R^2$
+
+Remember that $R^2$ going up indicates a better model fit, and that
+$R^2$ is defined as:
+
+\begin{equation}
+R^2 = 1 - \frac{RSS}{TSS}
+\end{equation}
+
+Where $TSS = \sum(y_i - \bar{y})^2$
+
+Then adjusted $R^2$ is
+
+\begin{equation}
+\text{Adjusted} R^2 = 1 - \frac{ RSS / (n - d - 1) }{ TSS / (n - 1) }
+\end{equation}
+
+Note that $\frac{RSS}{n - d - 1}$ may increase or decrease as the
+number of model parameters increases.
+
+*Note* Desipite being popular, and intuitive, adjusted $R^2$ does not
+have rigorous theoretical underpinings.
+
+*** Validation and Cross Validation
+
+Using a validation set used to be computationally infeasible. Now it's
+often the prefered method. Instead of estimating the test MSE, you can
+measure it directly.
+
+*** One Standard Error rule
+
+A way of selecting between models which have very simlar performance.
+
+1. calcuate the standard error fo the estimated test MSE for each
+   model size.
+2. Select the smallest model for which the estimated test error is
+   within one standard error of the lowest point on the curve.
+
+* 6.2 Shrinkage Methods
+Shrinkage involves fitting a model containing all $p$ predictors and
+using a technique that /constrains/ or /regularizes/ the coefficient
+estimates. I.e. it shrinks the coefficient estimates towards zero.
+
+It turns out that shrinking the coeficient estimates can significantly
+reduce their variance.
+
+We use two techniques
+
+1. Ride Regression
+2. The Lasso
+
+** 6.2.1 Ridge Regression
+When fitting coefficient estimates, least squares minimizes:
+
+\begin{equation}
+  RSS = \sum_{i=1}^2 \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}  \right)^2
+\end{equation}
+
+Ridge regression mimizes something different. The coefficient
+estimates, $\hat{\beta}^R$, are the values that minimize:
+
+\begin{equation}
+  \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}  \right)^2
+  + \lambda \sum_{j=1}^p \beta_j^2
+\end{equation}
+
+Where $\lambda$ is a tuning parameter to be determined separately.
+
+- shrinkage penalty :: The $\lambda$ term in the ridge-regression loss funciton
+  - this will be small when the coefficients $\beta_j$ are close to zero
+  - It does not include the intercept $\beta_0$
+
+Least squares is equivalent to ridge regression with $\lambda = 0$.
+
+*** Scaling and normalization
+
+- scale equivariant :: multiplying a predictor, $X_j$, by a constant
+     $c$ simply leads to a scaling of the least square coefficient
+     estimates by a factor of $1/c$
+
+Note that while least-squares is /scale equivariant/, ridge regression
+is not. It is best to apply ridge regression after standardizing the
+predictors.
+
+*** Why does ridge regression improve over least squares?
+
+- There is a bias-variance tradeoff in model selection
+- The $\lambda$ parameter lets us tune that tradeoff
+  - Increasing lambda reduces variance
+  - Increasing lambda increases bias
+  - (Moving towards the null model)
+
+Remember high variance in this context means "a small change in the
+training data can cause a large change in the least squares
+coefficient estimates".
+
+Ridge regression works best in situations where the least squares
+estimates have high variance (like when $p \approx n$).
+
+Ridge regression is also substantially faster than searching through
+$2^p$ models.
+
+** 6.2.2 The Lasso
+
+Ridge-regression will always include all $p$ predictors, even as it
+shrinks many of them towards zero. This make model interpretability
+hard.
+
+The lasso changes ridge regression's shrinkage penalty term to:
+
+\begin{equation}
+  \lambda \sum_{j=1}^p | \beta_j |
+\end{equation}
+
+That is, it uses an $l_1$ norm rather than an $l_2$ norm.
+
+The lasso also shrinks parameters towards zero, but it has the
+additional effect of shrinking the parameters to be actually zero,
+meaning we can eliminate them entirely.
+
+- This leads to /sparse/ models.
+
+** 6.2.3 Selecting the Tuning Parameter
+* 6.3 Dimension Reduction Methods
+** 6.3.1 Principle Components Regression
+** 6.3.2 Partial Least Squares
+* 6.4 Considerations in High Dimensions
+** 6.4.1 High-Dimensional Data
+** 6.4.2 What Goes Wrong in High Dimensions?
+** 6.4.3 REgression in High Dimensions
+** 6.4.4 Interpreting Results in High Dimensions
+End: pg 244
+* 6.5 Lab 1: Subset Selection Methods
+* 6.6 Lab 2: Ridge Regression and the Lasso
+* 6.7 Lab 3: PCR and PLS Regression
+* 6.8 Exercises
+End: pg 264

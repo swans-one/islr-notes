@@ -128,3 +128,25 @@ TP/P :: power
 - pg 190 -- Bootstrap questions
   - why do we sample with replacement?
   - How big does $B$ need to be?
+* 06 Regularization
+
+- pg 211 - what is $d$ in this equation?
+  - "Clearly the penalty increases as the number of predictors in the model increaes"
+    - Why is this clear?
+
+  - *ANSWER* Ohhh, because $d$ is the number of predictors! Why $d$ though?
+- pg 215 - a "tuning" parameter is a meta-parameter, right?
+  - Is this going to require another tuning set devision that we'll
+    use to select meta-parameters?
+
+- pg 219 - The lasso shrinks parameters to zero. But why?
+  - Is it because it doesn't disproportionatly penalize larger
+    parameters?
+
+- pg 233 - "We assume that the directions in which X_1,...,X_p show
+  the most variation are the directions that are associated with Y"
+  - Is this reasonable? When is it not reasonable.
+
+** Lab questions
+- Why during CV do we need to do regularization using the training data?
+- What the hell is going on with ~model.matrix~?
