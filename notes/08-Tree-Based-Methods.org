@@ -1,0 +1,231 @@
+* 8 Tree-Based Methods
+- Tree based methods :: involve segmenting the predictor space into a
+     number of regions.
+  - predictions are made by using the mean / mode of training
+    observations in the region.
+
+Simple decison trees are easy to use / interpret, but are not
+competetive with other supervised learning algorithms. We will also
+introduce bagging, random forests, and boosting. These techniques use
+multiple trees which are combined to yield a consensus prediction.
+
+* 8.1 The Basics of Decision Trees
+
+- Can be applied to both:
+  1. Regression
+  2. Classification
+
+** 8.1.1 Regression Trees
+
+*** Predicting Baseball Players' Salaries Using Regression Trees
+
+Hitters dataset to predict ~ln(Salary)~ based on:
+
+- Years :: \# years played in major leagues
+- Hits :: \# of hits made in the previous year
+
+We can write the rules of the tree as:
+
+- Years > 4.5
+  - Hits < 117.5 --- 5.999
+  - Hits > 117.5 --- 6.740
+- Years < 4.5 --- 5.107
+
+*** Prediction via Stratification of the Feature Space
+
+Two steps to building a regression tree:
+
+1. Divide the predictor space into distinct & non-overlapping regions
+2. For every observation that falls into the region, we make the same
+   prediction, the mean of the training values in that region.
+
+How do we choose the regions? We want to minimize the RSS, given in
+this case by:
+
+\begin{equation}
+  \sum_{j=1}^J \sum_{i \in R_j} (y_i - \hat{y}_{R_j})^2
+\end{equation}
+
+Where $J$ is the total number of regions and R_j$ is the \(j\)th
+region.
+
+It is computationally impossible to consider every possible partition,
+so we will use a top down, greedy approach.
+
+- Recursive Binary Splitting :: Make the best possible split on the
+     region, then recurse on sub-regions.
+
+For each split, the "best split" is defined as the split that
+minimizes RSS. We consider every cutpoint $s$ on the predictor $X_j$
+to create two half plane regions, $R_1$ and $R_2$
+
+\begin{equation}
+  R_1(j,s) = \{ X | X_j < s \} \quad \text{and} \quad R_2(j, s) = \{ X | X_j \geq s \}
+\end{equation}
+
+Then we find the value of $j$ and $s$ that minimizes the equation:
+
+\begin{equation}
+    \sum_{i: x_i \in R_1 (j,s)} (y_i - \hat{y}_{R_1})^2
+  + \sum_{i: x_i \in R_2 (j,s)} (y_i - \hat{y}_{R_2})^2
+\end{equation}
+
+We repeat this splitting, within these regions, creating sub-regions
+until some stoping criteria is reached. For example, until no region
+contains more than 5 observations.
+
+*** Tree Pruning
+
+The procedure above is likely to overfit the training data because the
+resulting tree is too complex. A smaller tree (fewer splits) may
+generalize better.
+
+We can't evaulate every possible pruning (every possible sub tree) so
+instead, we find a way to create a range of prunings, that vary with a
+tuning parameter $\alpha$.
+
+For each value of $\alpha$ there exists a subtree $T \subset T_0$ that
+minimizes:
+
+\begin{equation}
+  \sum_{m=1}^{|T|} \sum_{x_i \in R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|
+\end{equation}
+
+- $T_0$ :: a very large initial tree
+- subtree :: A tree that started from $T_0$ but has had nodes removed.
+- $|T|$ :: number of terminal nodes of the tree $T$
+- $R_m$ :: The rectangle corresponding to the mth terminal node
+
+We can observe:
+
+- When $\alpha = 0$, then $T = T_0$
+- As $\alpha$ grows, there is an increased penalty for terminal nodes
+
+** 8.1.2 Classification Trees
+
+A classification tree is just like a regression tree, but predicts a
+qualitative response rather than a quantitative response.
+
+For prediction, instead of the average of the training data in the
+region, we use the most common class in the region.
+
+Training is similar, but we can't use the RSS so we use the
+Gini index $G$ or entropy $D$, given by:
+
+\begin{equation}
+  G = \sum_{k=1}^{K} \hat{p}_{mk}(1 - \hat{p}_{mk})
+\end{equation}
+
+\begin{equation}
+D = - \sum_{k=1}^{K} \hat{p}_{mk} \log \hat{p}_{mk}
+\end{equation}
+
+Where $\hat{p}_{mk}$ is the proportion of training observations in the
+mth region that are from the kth class.
+
+Both entropy and the Gini index will be small when most of the
+observations in a region belong to a single class. That is, for all
+k$k$, $\hat{p}_{mk}$ is close to zero or one.
+
+To see, this, you can plot the change in the component of entropy
+between 0 and 1:
+
+#+BEGIN_SRC R
+entropy <- function(x) { -x * log(x) }
+s <- seq(0.01, 0.99, 0.01)
+plot(s, sapply(s, entropy))
+#+END_SRC
+
+This is good behavior for an objective function, since we want our
+regions to be composed of one class. These functions are sensitive to
+/node purity/.
+
+* 8.2 Bagging, Random Forests, Boosting
+** 8.2.1 Bagging
+
+Recall that given $n$ independent observations $Z_1, \ldots, Z_n$ each
+with variance $\sigma^2$:
+
+\begin{equation}
+  var(\bar{Z}) = \frac{\sigma^2}{n}
+\end{equation}
+
+That is, the mean of a set of observations reduces variance. We can
+use this property to fit a number of training models to different
+training set drawn from the population and average the results.
+
+We can also draw samples from a single training set:
+
+\begin{equation}
+  \hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}^{*b}(x)
+\end{equation}
+
+Decision tree bagging
+
+1. Construct $B$ bootstraped training sets
+2. Construct $B$ decision trees (don't prune them)
+3. When predicting, average the results of all $B$ trees
+
+*Note* $B$ can be in the hundreds or even thousands. The actuall
+number $B$ is not critical, as higher $B$ will not lead to
+overfitting. We can simply increase $B$ until at least the error settles.
+
+For classification, we can record the prediction of each tree and take
+the majority vote.
+
+*** Variable Importance Measures
+
+We lose interpretability with bagging. However we can obtain an
+overall summary of the importance of each predictor using the RSS /
+Gini index.
+
+- Average the total amount that RSS is decreased due to splits over a
+  given predictor, averaged over all trees.
+  - A large value is an important predictor
+
+** *.2.2 Random Forests
+
+Random forests improve bagged trees by a tweak that /decorrelates/ the trees.
+
+When a split is considered, only a random sample of predictors is
+allowed for the split.
+
+Rational:
+
+- A strong predictor will almost always take the top level split, even
+  after bagging $\rightarrow$ highly correlated trees
+- Averaging many highly correlated quantities does not lead to as
+  large of a reduction in variance as uncorrelated quantities.
+
+** 8.2.3 Boosting
+
+Boosting is a general approach that can be appplied to many
+statistical learning methods. (Here we're only talking about trees)
+
+- In bagging each tree is built independently
+- In boosting they're build sequentially
+  - Using information from previously grown trees
+  - Does not use bootstrap sampling
+  - Uses a modified version of the original data set
+
+Given the current model, we fit a decision tree to the residuals from
+the model.
+
+In general statistical learning approaches that /learn slowly/ tend to
+perform well.
+
+Boosting has three tuning parameters:
+
+1. The number of trees $B$.
+   - Unlike bagging we can overfit with high $B$ (but this happens slowly)
+   - Select this parameter with cross validation
+2. The shrinkage parameter $\lambda$
+   - Typical values are 0.01 or 0.001.
+   - Very small $\lambda$ can require high $B$
+3. The number of splits in each tree $d$.
+   - Often $d = 1$ can work well $\implies$ each tree is a "stump".
+
+
+* 8.3 Lab
+* 8.4 Exercises
+end 335

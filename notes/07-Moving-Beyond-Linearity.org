@@ -1,0 +1,185 @@
+* 7 Moving Beyond Linearity
+- So far we've focused mostly on linear models.
+- Good:
+  - Simple to describe and interpret
+- Bad:
+  - limitiations in terms of predictive power
+  - linearity assumtion is almost always approximate
+
+In this chapter we'll relax the linearity assumption while trying to
+retain interpretability. We'll look at the following models:
+
+- Polynomial regression :: Add extra predictors, by raising other
+     predictors to a power.
+- Step function :: Cut the range of a variable into K distinct regions
+                   in order to produce a qualitative variable.
+- Regression Splines :: An extension of polynomials & splines. Divide
+     a range into K regions, and fit polynomial models that connect
+     nicely at the boundaries.
+- Smoothing splines :: Like regression splines, but from a different
+     approach
+- Local regression :: Like splines, but the regions overlap
+- Generalized additive models :: Let us extend the methods above to
+     deal with multiple predictors.
+
+* 7.1 Polynomial Regression
+
+The standard way to extend linear regression is to add polynomial
+predictors:
+
+\begin{equation}
+  y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3
+      + \cdots + \beta_d x_i^d + \varepsilon_i,
+\end{equation}
+
+This approach is known as polynomial regression. Coefficients in this
+approach can easily be estimated using least squares linear
+regression.
+
+Note, that with high degree polynomials, we can get strange looking
+curve, and very strange looking confidence intervals.
+
+* 7.2 Step Functions
+
+Polynomial features force a global structure on non-linearities. /Step
+functions/ can be used to localize non-linearities to a particular
+region.
+
+If we create cut-points in the data, and create $K$, indicator
+variables for each of the regions they represent:
+
+\begin{equation}
+\begin{split}
+  C_0(X) & = I(X < c_1), \\
+  C_1(x) & = (c_1 \leq X < c_2), \\
+         & \vdots \\
+  C_K(X) & = I(c_K \leq X), \\
+\end{split}
+\end{equation}
+
+Then, we can use these as interaction terms to limit the scope of the
+coefficients to one region at a time:
+
+\begin{equation}
+  y_i = /beta_0 + \beta_1 C_1 (x_i) + \beta_2 C_2 (x_i)
+      + \cdots + \beta_K C_K (x_i) + \varepsilon_i
+\end{equation}
+
+For any given $X$, only one value of $C_1, C_2, \ldots, C_K$ can be
+non-zero, so then each $\beta_k$ represents the deviation from mean in
+the kth region ($\beta_0$) represents the overall mean.
+
+* 7.3 Basis Functions
+
+Both polynomial and stepwise are special cases of the general approach
+of basis functions. The basis function approach allows you to apply
+fixed, known functions to your input variable. Basis functions have
+the advantage of being fully interpretable under the standard linear
+model.
+
+* 7.4 Regression Splines
+
+We can create piecewise polynomials, by fitting separate polynomial
+models in separate regions of the data.
+
+Without constraints on the piecwise models, there will be jumps at the
+boundaries. We can constrain the model to continuous at the given
+point, and we can also constrain them to have continuous first and
+second derivatives at that point (for a cubic, other degrees may
+require more / fewer constraints).
+
+- degree d spline :: a piecewise degree-d polynomial, with continuit
+     in derivatives up to degree d - 1 at each knot.
+
+A /cubic spline/ with $K$ knots uses a total of $4 + K$ degrees of
+freedom.
+
+We can use the basis model to represent a regression spline with the
+appropriate choice of basis function:
+
+\begin{equation}
+  y_i = \beta_0 + \beta_1 b_1 (x_i) + \beta_2 b_2(x_i)
+      + \cdots + \beta_{K+3}b_{K+3}(x_i) + \varepsilon_i
+\end{equation}
+
+For a n-degree polynomial with $K$ knots, we need $(n + K)$ basis
+functions. The first $n$ are our polynomial terms, and the $K$ are
+given by:
+
+\begin{equation}
+  h(x, \xi) = (x - \xi)^3_+
+  = \begin{cases}
+      (x - \xi)^3 & \text{ if } x > \xi \\
+      0           & \text{ otherwise },
+    \end{cases}
+\end{equation}
+
+where $\xi$ is the knot.
+
+This choice of basis function can be shown to only lead to a
+discontinuity in only the third derivative at $\xi$.
+
+** Natural spline
+
+Splines can often have high variance at the boundaries. Adding the
+addtional constraint that a spline must be linear at the boundary is
+called a /natural spline/ and improve the situation.
+
+** Choosing the number and location of the knots
+
+- The function can change most rapidly in areas with a lot of knots
+- In practice knots are often placed uniformly
+- We can use cross validation to choose a good number of knots
+
+** Comparison to polynomial regression
+
+Splines can be more effective than polynomial regression since we
+often need to have high-degree polynomials to achieve the flexibility
+introduced by adding knots. An approach with lower degrees typically
+produces more stable estimates.
+
+* 7.5 Smoothing Splines
+
+We want to find a function $g(x_i)$ that keeps RSS small, but doesn't
+fit every point. We can add a tuning parameter to our objective
+function that does this:
+
+\begin{equation}
+\sum_{i=1}^n (y_i - g(x_i))^2 + \lambda \int g''(t)^2 dt
+\end{equation}
+
+The function $g$ that minimizes this equation is called a smoothing
+spline. Adding a penalty for the integral of the second derivative is
+adding a penalty for large changes in slope.
+
+When the tuning parameter $\lambda$ is 0, there is no penalty, and the
+function can do arbitrary interpolation. When the penalty approaches
+$\infty$ the $g$ will be perfectly smooth, a straight line.
+
+Interestingly the function that minimizes this loss function can be
+shown to be a /natural cubic spline with knots at each $x_i$/! Not the
+same one as above, but a shrunken version, shrunk by the tuning
+parameter.
+
+** Choosing the smoothing parameter
+
+It looks like using a knot at each $x_i$ should use too many degrees
+of freedom. The tuning parameter controls the effective degrees of
+freedom from $n$ to 2.
+
+To choose $\lambda$ we can use cross validation. For smoothing
+splines, LOOCV can be computed very efficiently.
+
+* 7.6 Local Regression
+* 7.7 Generalized Additive Models
+
+How can we extend these non linear approaches to multiple predictors?
+
+- Generalized additive models :: A general framework for extending a
+     standard linear model by allowing non-linear functions of each of
+     the variables while maintaining /additivity/.
+
+* 7.8 Lab: Non-linear Modeling
+pg 287, see labs notes
+* 7.9 Exercises
+pg 297, see exercises notes

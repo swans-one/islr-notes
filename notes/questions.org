@@ -150,3 +150,27 @@ TP/P :: power
 ** Lab questions
 - Why during CV do we need to do regularization using the training data?
 - What the hell is going on with ~model.matrix~?
+* 07 Beyond Linearity
+- pg 273 How do those /truncated power basis/ functions ensure the
+  constraints of smooth derivatives a the knots?
+- pg 275 How does a natural spline change the form of the equation
+  we're fitting.
+- pg 275 How does a spline model affect model interpretability?
+- pg 276 figure 7.6, doesn't degrees of freedom = 1 represent a linear
+  model? How does this relate to choosing the number of knots? Is
+  there any proofe that splines improve the sitation here?
+* 08 Tree Based Methods
+- pg 309: What is a sub-tree?
+  - How do you find a given sub-tree? Like, what nodes do you prune?
+    And in what order?
+
+- pg 318 "each bagged tree makes use of around two-thirds of the
+  observations"
+  - I think I need to review the bootstrap to understand this.
+- pg 318 How do OOB (out of bag) predictions work?
+
+- pg 322 "In general statistical learning approaches that /learn slowly/ tend to
+  perform well."
+  - That's a really interesting assertion. What does it mean??
+
+- pg 323 what does it mean to "add in a shrunken version of the new tree"?
