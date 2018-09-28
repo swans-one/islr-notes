@@ -1,0 +1,101 @@
+* Conceptual
+
+** Question 5
+
+*** Question
+
+Suppose we produce ten bootstrapped samples from a data set containing
+red and green classes. We then apply a classification tree to each
+bootstrapped sample and, for a specific value of $X$, produce 10
+estimates of $P(\text{Class is Red} | X)$:
+
+\[
+  0.1, 0.15, 0.2, 0.2, 0.55, 0.6, 0.6, 0.65, 0.7, \text{ and } 0.75.
+\]
+
+There are two common ways to combine these results together into a
+single class prediction. One is the majority vote approach discussed in
+this chapter. The second approach is to classify based on the average
+probability. In this example, what is the final classification under each
+of these two approaches?
+
+*** Answer
+
+By tallying votes based on $P(\text{Class is Red} | X)$, we get the
+following votes:
+
+| Probability | Vote  |
+|-------------+-------|
+|         0.1 | Green |
+|        0.15 | Green |
+|         0.2 | Green |
+|         0.2 | Green |
+|        0.55 | Red   |
+|         0.6 | Red   |
+|         0.6 | Red   |
+|        0.65 | Red   |
+|         0.7 | Red   |
+|        0.75 | Red   |
+
+The 6 votes Red versus 4 votes Green, would lead to the prediction of "Red."
+
+However, if we classify based on the average probability of each tree in $T$:
+
+\[
+  \frac{\sum_{t \in T} P_t(\text{red}|X)}{10} = 0.45
+\]
+
+We would predict "Green."
+
+* Applied
+
+** Question 7
+
+*** Question
+
+In the lab, we applied random forests to the Boston data using
+~mtry=6~ and using ~ntree=25~ and ~ntree=500~ . Create a plot
+displaying the test error resulting from random forests on this data
+set for a more com- prehensive range of values for ~mtry~ and ~ntree~. You
+can model your plot after Figure 8.10. Describe the results obtained.
+
+*** Answer
+
+The following code was used to generate a dataframe with different
+values for ~ntree~, ~mtry~, tracking their test error:
+
+#+BEGIN_SRC R
+library(Boston)
+library(randomForest)
+library(ggplot2)
+
+mses <- data.frame(
+  ntree=rep(seq(25, 1000, 25), 4),
+  mtry=c(rep(3, 40), rep(6, 40), rep(9, 40), rep(13, 40)),
+  test.mse=rep(0, 4 * 40)
+)
+
+bagged.mse <- function(x) {
+  ntree <- x[1]
+  mtry <- x[2]
+  rf.train <- sample(1:nrow(Boston), nrow(Boston) / 2)
+  rf.test <- Boston[-rf.train, "medv"]
+
+  bag.boston <- randomForest(
+    medv ~ .,
+    data = Boston,
+    subset = rf.train,
+    mtry = mtry,
+    ntree = ntree
+  )
+  y.hat.rf <- predict(bag.boston, newdata=Boston[-rf.train,])
+  mean((y.hat.rf - rf.test)^2)
+}
+
+test.mses <- apply(mses, 1, bagged.mse)
+mses$test.mse <- test.mses
+
+ggplot(mses, aes(x=ntree, y=test.mse, color=factor(mtry))) + geom_line()
+#+END_SRC
+
+\includegraphics{random-forest-improvement.png}
