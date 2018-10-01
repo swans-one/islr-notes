@@ -1,0 +1,208 @@
+* 9 Support Vector Machines
+
+Three techniques for classification that build off of one another:
+
+- Maximal margin classifier
+- Support vector classifier
+- Support vector machines
+
+* 9.1 Maximal Margin Classifier
+** 9.1.1 What is a Hyperplane
+- hyperplane :: In a p-dimensional space, it is a flat affine subspace
+                of dimension p-1.
+- affine :: Does not need to pass through the origin
+
+A p-dimensional hyperplane is given by an equation of the form:
+
+\begin{equation}
+  \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p = 0
+\end{equation}
+
+** 9.1.2 Classification Using a Separating Hyperplane
+
+Say we have $\mathbf{X}$, an $n \times p$ matrix, with $n$ training
+observations in a $p$-dimensional space.
+
+Say, also then that observations fall into two classes. That is, $y_i \in \{-1, 1\}$.
+
+Then we could have a hyperplane with the property that:
+
+\begin{equation}
+  y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip}) > 0
+\end{equation}
+
+If we can find a hyperplane, it makes a very natural classifier.
+
+** 9.1.3 The Maximal Margin Classifier
+
+If there exists a separating hyperplane, there are most likley
+infinitely many. How do we choose?
+
+- Maximal Margin Classifier :: Choose a hyperplane which maximizes the
+     distance to the nearest training data of each class
+
+A consequence of this technique is that the hyperplane only relies on
+a small number of points, the "support vectors"
+
+** 9.1.4 Construction of the Maximal Margin Classifier
+
+1. Maximimize $M$
+2. Such that $\sum{\mathbf{\beta}^2} = 1$
+3. And that $y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip}) > M, \quad \forall i$
+
+That is, make sure all the points are at least $M$ away from the
+hyperplane, and make $M$ big.
+
+** 9.1.5 The Non-separable Case
+
+The maximal margin classifier only works /if a separating hyperplane exists/.
+
+* 9.2 Support Vector Classifiers
+** 9.2.1 Overview of the Support Vector Classifier
+
+If we remove the contraint that the margin classifier has to work for
+all the points, we will have:
+
+- Greater robustness to individual observations
+- Better calssification of /most/ of the training observations
+
+- Support vector classifier :: We allow some points to be on the wrong
+     side of the margin, or even the wrong side of the hyperplane.
+  - Also known as the /soft margin classifier/.
+
+** 9.2.2 Details of the Support Vector Classifier
+
+1. Maximize $M$
+2. Such that $\sum \mathbf{\beta^2} = 1$
+3. And that $y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip}) > M(1 - \epsilon_i)$
+4. Where $\epsilon_i \geq 0$ and $\sum \epsilon_i \leq C$
+
+In the above, $\epsilon_i$ are "slack variables" that allow individual
+data points to be on the wrong side of the margin by some amount and
+$C$ is a tunin parameter to control how much of this we allow.
+
+Generally $C$ is treated as a tuning parameter that is chosen through
+cross validation.
+
+The classifier described here has the interesting property that the
+only observations that affect the hyperplane are:
+
+- observations that lie on the margin
+- observations that violate the margin
+
+All other points do not affect the choice of the hyperplane. We call
+the points that do affect our choice of hyperplane /support vectors/.
+
+- Large $C$ $\rightarrow$ many support vectors (higher bias, lower variance)
+- Small $C$ $\rightarrow$ few support vectors (lower bias, higher variance)
+
+*Note* Because this classifier requires a linear boundary, it can
+behave /very/ poorly with non linear decision boundaries.
+
+* 9.3 Support Vector Machines
+** 9.3.1 Classification with Non-linear Decision Boundaries
+
+We could do this with a linear classifier by introducing
+transformations of the predictors. However, it may be difficult to
+capture the correct transformations without introducing an
+unmanageable number of predictors.
+
+** 9.3.2 The Support Vector Machine
+
+- Support Vector Machine (SVM) :: an extension of the the support
+     vecto rclassifier that results from enlarging the feature space
+     in a specific way, using kernels.
+
+*** Support vector classifiers & inner products
+
+It can be shown that the linear support vector classifier can be
+represented as:
+
+\begin{equation}
+  \label{innerproduct}
+  f(x) = \beta_0 + \sum_{i=1}^n \alpha_i \langle x, x_i \rangle
+\end{equation}
+
+And that to estimate the parameters $\alpha_1,\ldots,\alpha_n$ and
+$\beta_0$ all we need are the $\choose{n}{2}$ inner products
+$\langle x_i, x_{i'} \rangle$ between all pairs of training
+observations.
+
+We can actually limit the number of inner products we need to compute
+to just those that involve support vectors, reducing the number
+significantly.
+
+*** Kernels
+
+Suppose we replace the inner product in \ref{innerproduct} with a
+generalization of the inner product:
+
+\begin{equation}
+  K(x_i, x_{i'})
+\end{equation}
+
+Where $K$ is some function we'll refer to as a /kernel/.
+
+An example could be:
+
+\begin{equation}
+  K(x_i, x_{i'}) = \left(1 + \sum_{j=1}^p x_{ij} x_{i'j} \right)^d
+\end{equation}
+
+Which is a /polynomial kernel/ of degree $d$. If $d > 1$ then this
+leads to a much more flexible decision boundary.
+
+Or we could use a /radial kernel/, which looks like:
+
+\begin{equation}
+  K(x_i, x_{i'}) = exp \left( -\gamma \sum_{j=1}^p (x_{ij} - x_{i'j})^2 \right)
+\end{equation}
+
+*** Why use a kernel?
+
+Why use a kernel when we could just enlarge the feature space? When we
+use a kernel we still only need to compute the $\choose{n}{2}$ pairs,
+without having to explicitly enlarge the feature space.
+
+For the radial kernel, the feature space is implicit and infinite
+dimensional, so adding enough features is necessarily intractable.
+
+** 9.3.3 An Application to the Heart Disease Data
+
+We note here that SVM with a radial kernel and a high value of
+$\gamma$ produces a very flexible decison boundary that can match the
+training data almost perfectly. However, on test data, this highly
+flexible model performs poorly compared to LDA or the less flexible
+radial kernels.
+
+This performance is representative of what we see with other models,
+where a highly flexible model is able to fit training data well, but
+does not necessarily generalize to novel data.
+
+* 9.4 SVMs with More than Two Classes
+
+The notion of separating hyperplanes does not extend well to multiple
+classes. There are two common approaches. One-versus-one and
+one-versus-all.
+
+** 9.4.1 One-Versus-One Classification
+
+1. Pair all classes and construct $\choose{k}{2}$ SVM models, one for
+   each pair
+2. Run a novel observation through each classifier, counting the
+   number of times it's assigned to each class, $K$
+3. Return the class $K$ that has the most votes from step 2.
+
+** 9.4.2 One-Versus-All Classification
+
+1. Train $K$ models, each comparing class $k$ to all other observations.
+2. Choose $K$ based on the largest distance to any of the margins, as
+   this represents the highest confidence that the observation belongs
+   to that class.
+
+* 9.5 Relationship to Logistic Regression
+
+There are actually some deep connections between the SVM classifier
+and the logistic regression decison boundary.
+
+* 9.6 Lab: Support Vector Machines
