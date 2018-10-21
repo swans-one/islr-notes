@@ -124,7 +124,7 @@ represented as:
 \end{equation}
 
 And that to estimate the parameters $\alpha_1,\ldots,\alpha_n$ and
-$\beta_0$ all we need are the $\choose{n}{2}$ inner products
+$\beta_0$ all we need are the ${n \choose 2}$ inner products
 $\langle x_i, x_{i'} \rangle$ between all pairs of training
 observations.
 
@@ -161,7 +161,7 @@ Or we could use a /radial kernel/, which looks like:
 *** Why use a kernel?
 
 Why use a kernel when we could just enlarge the feature space? When we
-use a kernel we still only need to compute the $\choose{n}{2}$ pairs,
+use a kernel we still only need to compute the ${n \choose 2}$ pairs,
 without having to explicitly enlarge the feature space.
 
 For the radial kernel, the feature space is implicit and infinite
@@ -187,7 +187,7 @@ one-versus-all.
 
 ** 9.4.1 One-Versus-One Classification
 
-1. Pair all classes and construct $\choose{k}{2}$ SVM models, one for
+1. Pair all classes and construct ${k \choose 2}$ SVM models, one for
    each pair
 2. Run a novel observation through each classifier, counting the
    number of times it's assigned to each class, $K$
