@@ -174,3 +174,10 @@ TP/P :: power
   - That's a really interesting assertion. What does it mean??
 
 - pg 323 what does it mean to "add in a shrunken version of the new tree"?
+* 10 Unsupervised Learning
+- pg 378 - How do I interpret the arrows on this chart?
+- pg 379 - "The first principal component loading vector ... is the
+  line in p-dimensional space that is closest to the n-observations"
+  - The vector from zero?? Or a derived vector?
+- pg 395 - Why does single linkage lead to less balanced trees?
+- pg 397 - What specifically is the correlation based measure?

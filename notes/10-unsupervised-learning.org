@@ -1,0 +1,239 @@
+* 10 Unsuperised Learning
+Most of this book is about supervised learning. Here we'll talk
+/unsupervised learning/
+
+- unsuperised learning :: ML in the context where you only have
+     features, no responses.
+
+Unsupervised learning involves a diverse set of techniques to answer
+questions such as:
+
+- Is there an informative way to visualize this data
+- Are there subgroups among the variables?
+
+** 10.1 The Challenge of Unsupervised Learning
+- Tends to be more subjective
+  - No simple goal for the analysis
+  - Often performed as part of exploratory analysis
+- No way to perform cross validation
+
+Examples of practical use:
+
+- Grouping assays for cancer research into similar categories
+- Identify groups of online shoppers with similar browsing and purchase
+  history
+- Choosing what search results to display to an individual based on
+  click histories of others.
+
+** 10.2 Principal Components Analysis
+
+- Principal component analysis (PCA) :: The process by which principal
+     components are computed, and the subsequent use of these
+     components in understanding the data.
+
+It produces a set of derived variables that could be used in a
+supervised learning task.
+
+*** 10.2.1 What are Principal Components?
+
+If we have high dimensional data, we would like to find a low
+dimensional representation that captures as much of the information as
+possible.
+
+- PCA == dimensionality reduction
+
+We're trying to find a dimension that is as /interesting/ as possible,
+where interesting is defined as the amount the observations vary along
+each dimension.
+
+The /first principal component/ of a set of features $X_1, X_2, \ldots, X_p$,
+is the normalized linear combination of the features:
+
+\begin{equation}
+  Z_1 = \phi_{11}X_1 + \phi_{21}X_2 + \ldots + \phi_{p1}X_p
+\end{equation}
+
+that has the largest variance.
+
+- normalized :: implies $\sum_{j=1}^p \phi_{j1}^2 = 1$
+- loadings :: The elements $\phi_{11}, \ldots, \phi_{p1}$
+- loading vector :: $\phi_1 = (\phi_{11} \phi_{21} \ldots \phi_{p1})^T$
+- scores :: the values $z_{11}, \ldots, z_{n1}$ are called the scores
+            of the first principal component
+
+We normalize the loadings since alowing them to be arbitrarily large
+could produce arbitrarily large variance.
+
+The /second principal component/, $Z_2$, is the linear combination of
+$\mathbf{X}$ that has maximal variance out of all linear combinations
+that are uncorrelated with $Z_1$
+
+**** A geometric interpretation
+
+The loading vector $\phi_1$ defines a direction in feature space along
+which the data vary the most.
+
+Projecting our $n$ data points onto the loading vector gives us
+our principal component scores $z_{11},\ldots,z_{n1}$.
+
+Note that our second principal component, because it is uncorrelated
+with the first, has a loading vector, $\phi_2$, which is orthogonal to $\phi_2$
+
+
+*** 10.2.2 Another Interpretation of Principal Components
+
+Another possible interpretation for PCA:
+
+#+BEGIN_QUOTE
+Principal components provide low-dimensional linear surfaces that are
+"closest" to the observations.
+#+END_QUOTE
+
+
+
+*** 10.2.3 More on PCA
+*** 10.2.4 Other Uses for Principal Components
+
+** 10.3 Clustering Methods
+
+- Clustering :: a broad set of techniques for finding subgroups in a
+                data set where:
+  - items within the group are similar
+  - items in different groups are dissimilar
+
+This is an unsupervised problem because we don't have data labeled by
+expected group.
+
+We'll focus on two methons:
+
+1. K-means clustering
+2. Hierarchical clustering
+
+*** 10.3.1 K-Means Clustering
+
+Partition into a set of $K$ distinct, non-overlapping
+clusters. Requires us to set the desired number of cluster, $K$.
+
+We choose non-overlapping clusters $C_1, \ldots, C_k$ such that we're
+minimizing within-cluster variation.
+
+How do we define within-cluster variation:
+
+- squared pairwise euclidean distance
+
+The algorithm:
+
+1. Randomly assign a number from 1-k to each observation (inital
+   assignment)
+2. Iterate until assignments stop changing:
+   1. For each of the K clusters, compute the "centroid," the vector
+      of feature means
+   2. Assign each observation to the cluster whose centroid is closest
+
+This method finds a local optimum. It must be run multiple times to
+find a global optimum.
+
+Note: Knowing the number of K to choose is far from simple.
+
+*** 10.3.2 Hierarchical Clustering
+
+An alternative to K-means which doesn't require us to pre-specify a
+number of clusters. It builds a dendogram (tree).
+
+We're doing /agglomerative/ or /bottom-up/ clustering. Which means we
+build our dendogram starting from the leaves, and combining clusters
+to the trunk.
+
+**** Interpreting a Dendogram
+
+- Each leaf represents one of the original observations
+- similar leaves "fuse" as you move up the tree
+- Eventually, similar branches "fuse"
+- Observations that fuse higher on the tree will be more different
+- We can "cut" the dendogram at a specific height to create our
+  clusters
+
+Note that we cannot draw conclusions about the similarity of two
+observations basedn their proximity along the horizontal axis.
+
+We can only draw conclusions about their similarity based on the
+/vertical height of when their branches first fuse/.
+
+Note that with Hierarchical clustering, each clustering is a subset of
+the clustering with one fewer clusters. This may not make sense in
+reality. Imagine a group evenly divided between male-female, and
+between french, spanish, and italian. The best 2-cluster may be by
+gender, and the best 3-cluster by nationality, which is not a
+sub-cluster of by gender.
+
+**** The Hierarchical Clustering Algorithm
+
+We must choose a dissimilarity measure. Euclidean distance is typical.
+
+For dissimilarity between two clusters, we use "linkage"
+
+| Linkage  | Description                           |
+|----------+---------------------------------------|
+| complete | largest pairwise dissimilarity        |
+| single   | smallest pairwise dissimilarity       |
+| average  | average of all pairwise dissimilarity |
+| centroid | dissimilarity of centroids            |
+
+Usually prefer complete or average. Centroid can lead to inversions.
+
+The steps:
+
+1. Each of the n observations is its own cluster
+2. Repeat until there is one cluster:
+   1. The two clusters that are most similar are fused
+   2. The height of their fusion is the dismilarity
+
+**** Choice of Dissimilarity Measure
+
+You could use correlation based dissimilarity
+
+If you're finding clusters in shopers behaviour, using a distance
+based measure would cluster less frequent shoppers together, which may
+not be desireable.
+
+*** 10.3.3 Practical Issues in Clustering
+
+Here are some of the issues you may run into
+
+**** Small Decisions with Big Consequences
+In order to perform clustering, some decisions must be made:
+
+- Do you need to standardize features?
+- Which algorithm do you choose?
+- For Hierarchical clustering
+  - What dissimilarity measure?
+  - What type of linkage?
+  - Where to cut the dendogram?
+- For k-means
+  - How many clusters?
+
+All of these choises can have a large impact on the results you
+obtain.
+
+**** Validating the Clusters Obtained
+
+We want to know if the clusters we've found represent true
+sub-groups. There is not a consensus on a single best approach.
+
+**** Other Considerations in Clustering
+
+- There may be outliers in the data, that shouldn't be clustered
+- Clustering methods are not very robust to data perturbations
+
+**** A Tempered Approach to Interpreting the Results of Clustering
+
+- Perform clustering with different choices for each parameter
+  - Look at the full set of results to see if patterns consistently
+    emmrge
+
+- cluster subsets of the data to see if the model is robust to data
+  variation.
+
+- Be careful about how the results of clustering are reported
+
+** 10.4 Lab 1: Principal Components Analysis

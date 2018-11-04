@@ -1,0 +1,109 @@
+* Conceptual
+
+** Question 4
+*** Question
+
+Suppose that for a particular data set, we perform hierarchical
+clustering using single likage and using complete linkage. We obtain
+two dendograms.
+
+1. At a certain point on the single linkage dedogram, the clusters
+   {1,2,3} and {4,5} fuse. On the ocmplete linkage dendogram, the
+   clusters {1,2,3} and {4,5} also fuse at a certain point. Which
+   fusion will occur higher on the tree, or will they fuse at the same
+   height, or is there not enough information to tell?
+2. At a certain point on the single linkage dendogram, the clusters
+   {5} and {6} fuse. On the complete linkage dendrogram, the clusters
+   {5} and {6} also fuse at a certain point, which fusion will occur
+   higher on the tree, or will they fuse at the same height, or is
+   there not enough information to tell?
+
+*** Answer
+
+4.1 -- The clusters will fuse at a higher point on the dendrogram for
+complete linkage than for single linkage.
+
+4.2 -- The clusters will fuse at the same point on the dendrogram for
+single and complete linkage.
+
+* Applied
+
+** Question 9
+
+*** Question
+
+Consider the USArrests data, we will now perform hierarchical
+clustering on the states
+
+1. Using hierarchical clustering with complete linkage and Euclidean
+   distance, cluster the states.
+2. Cut the dendrogram at a height that results in three distinct
+   clusters. Which states belong to which clusters?
+3. Hiearchically cluster the states using complete linkage and
+   Euclidean distance, /after scaling the variables to ahve standard
+   deviation one/.
+4. What effect dose scalling the vairables have on the heirarchical
+   clustering obtained? Should they be scaled?
+
+*** Answer
+
+Code:
+
+#+BEGIN_SRC R
+## Step 1
+states <- row.names(USArrests)
+states.complete <- hclust(dist(USArrests), method="complete")
+plot(states.complete)
+
+## Step 2
+cutree(states.complete, 3)
+
+## Step 3
+scaled.arrests <- scale(USArrests)
+states.complete.scaled <- hclust(dist(scaled.arrests), method="complete")
+plot(states.complete.scaled)
+cutree(states.complete.scaled, 3)
+
+## Step 4
+par(mfrow=c(1,2))
+plot(states.complete, cex=0.7)
+plot(states.complete.scaled, cex=0.7)
+
+#+END_SRC
+
+Explanation
+
+Step 2
+
+| Cluster 1 abcdefg | Cluster 2     | Cluster 3    |
+|-------------------+---------------+--------------|
+| Alabama           | Arkansas      | Hawaii       |
+| Alaska            | Colorado      | Idaho        |
+| Arizona           | Georgia       | Indiana      |
+| California        | Massachusetts | Iowa         |
+| Delaware          | Missouri      | Kansas       |
+| Florida           | NewJersey     | Kentucky     |
+| Illinois          | Oklahoma      | Maine        |
+| Louisiana         | Oregon        | Minnesota    |
+| Maryland          | RhodeIsland   | Montana      |
+| Michigan          | Tennessee     | Nebraska     |
+| Mississippi       | Texas         | NewHampshire |
+| Nevada            | Virginia      | NorthDakota  |
+| NewMexico         | Washington    | Ohio         |
+| NewYork           | Wyoming       | Pennsylvania |
+| NorthCarolina     | Connecticut   | SouthDakota  |
+| SouthCarolina     |               | Utah         |
+|                   |               | Vermont      |
+|                   |               | WestVirginia |
+|                   |               | Wisconsin    |
+
+
+Step 4
+
+I think I would prefer the scaled version. It seems to cluster states
+better based on similarities in geography, which is probalby a good
+proxy for similarities in other metrics.
+
+If I were to look more closely at the data, I would probably find that
+clustering in the unscaled version is based largely on arrests, which
+has the highest absolute value of variance.
